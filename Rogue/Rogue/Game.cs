@@ -14,6 +14,8 @@ namespace Rogue
             string Rotu;
             string Luokka;
             string PlayerName;
+
+            //Nimi valinta (ei hyväksy tyhjää eikä numeroita)
             while (true)
             {
                 PlayerCharacter player = new PlayerCharacter();
@@ -44,7 +46,7 @@ namespace Rogue
                 }
             }
 
-
+            //Rotu valinta
             while (true)
             {
                 Console.WriteLine("Valitse rotu");
@@ -79,6 +81,7 @@ namespace Rogue
                 }
             }
             
+            //Class valinta
             while (true)
             {
                 Console.WriteLine("Valitse luokka");
