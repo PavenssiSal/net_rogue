@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Numerics;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,9 +16,13 @@ namespace Rogue
         string PlayerName;
         PlayerCharacter player = new PlayerCharacter();
 
+        Map level01;
+
+        PlayerCharacter Piirra;
+
         public void Run()
         {
-            //Nimi valinta (ei hyväksy tyhjää eikä numeroita)
+            // Nimi valinta (ei hyväksy tyhjää eikä numeroita)
             while (true)
             {
                 Console.WriteLine("What is your name?");
@@ -47,7 +52,7 @@ namespace Rogue
                 }
             }
 
-            //Rotu valinta
+            // Rotu valinta
             while (true)
             {
                 Console.WriteLine("Valitse rotu");
@@ -82,7 +87,7 @@ namespace Rogue
                 }
             }
 
-            //Class valinta
+            // Luokka valinta
             while (true)
             {
                 Console.WriteLine("Valitse luokka");
@@ -131,40 +136,19 @@ namespace Rogue
             // Set player starting position
             player.position = new Vector2(1, 1);
 
-            // Clear screen
+            //Clear text
             Console.Clear();
+
+
+
+            MapLoader loader = new MapLoader();
+            level01 = loader.LoadTestMap();
+
+            level01.Draw();
+
             // Draw the player
             Console.SetCursorPosition((int)player.position.X, (int)player.position.Y);
             Console.Write("@");
-
-            // Draw map
-            Console.ForegroundColor = ConsoleColor.Gray; // Change to map color
-            int mapWidth = 10; // Just for example, replace with your actual map width
-            int[] mapTiles = { 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 2, 2, 1, 1, 1 }; // Just for example, replace with your actual map tiles
-            int mapHeight = mapTiles.Length / mapWidth; // Calculate the height: the amount of rows
-            for (int row = 0; row < mapHeight; row++)
-            {
-                for (int col = 0; col < mapWidth; col++)
-                {
-                    int index = col + row * mapWidth; // Calculate index of tile at (col, row)
-                    int tileId = mapTiles[index];     // Read the tile value at index
-
-                    // Draw the tile graphics
-                    Console.SetCursorPosition(col, row);
-                    switch (tileId)
-                    {
-                        case 1:
-                            Console.Write(".");
-                            break;
-                        case 2:
-                            Console.Write("#");
-                            break;
-                        default:
-                            Console.Write(" ");
-                            break;
-                    }
-                }
-            }
 
             while (true)
             {
@@ -201,7 +185,7 @@ namespace Rogue
                 {
                     player.position.X = 0;
                 }
-                else if (player.position.X > Console.WindowWidth - 1)
+                else if (player.position.X >= Console.WindowWidth)
                 {
                     player.position.X = Console.WindowWidth - 1;
                 }
@@ -209,14 +193,13 @@ namespace Rogue
                 {
                     player.position.Y = 0;
                 }
-                else if (player.position.Y > Console.WindowHeight - 1)
+                else if (player.position.Y >= Console.WindowHeight)
                 {
                     player.position.Y = Console.WindowHeight - 1;
                 }
                 // -----------Draw:
-                // Clear the screen so that player appears only in one place
                 Console.Clear();
-                // Draw the player
+                // Redraw the player
                 Console.SetCursorPosition((int)player.position.X, (int)player.position.Y);
                 Console.Write("@");
             }
