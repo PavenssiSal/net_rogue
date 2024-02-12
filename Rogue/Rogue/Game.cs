@@ -1,11 +1,4 @@
-﻿using System.Numerics;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Rogue
 {
@@ -139,8 +132,6 @@ namespace Rogue
             //Clear text
             Console.Clear();
 
-
-
             MapLoader loader = new MapLoader();
             level01 = loader.LoadTestMap();
 
@@ -175,33 +166,13 @@ namespace Rogue
                     moveX = 1;
                 }
 
-                // Move the player
-                player.position.X += moveX;
-                player.position.Y += moveY;
                 player.Move(moveX, moveY);
 
-                // Prevent player from going outside screen
-                if (player.position.X < 0)
-                {
-                    player.position.X = 0;
-                }
-                else if (player.position.X >= Console.WindowWidth)
-                {
-                    player.position.X = Console.WindowWidth - 1;
-                }
-                if (player.position.Y < 0)
-                {
-                    player.position.Y = 0;
-                }
-                else if (player.position.Y >= Console.WindowHeight)
-                {
-                    player.position.Y = Console.WindowHeight - 1;
-                }
                 // -----------Draw:
                 Console.Clear();
+                level01.Draw();
                 // Redraw the player
-                Console.SetCursorPosition((int)player.position.X, (int)player.position.Y);
-                Console.Write("@");
+                player.Draw();
             }
         }
     }

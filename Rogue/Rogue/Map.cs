@@ -9,6 +9,7 @@ namespace Rogue
     public class Map
     {
         public int mapWidth;
+        public int mapHeight;
         public int[] mapTiles;
 
         public void Draw()
