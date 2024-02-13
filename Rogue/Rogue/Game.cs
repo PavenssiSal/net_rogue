@@ -142,7 +142,7 @@ namespace Rogue
 
             // Draw the player
             Console.SetCursorPosition((int)player.position.X, (int)player.position.Y);
-            Console.Write("@");
+            Console.Write("¤");
 
             // ------------Update:
             // Prepare to read movement input
@@ -171,9 +171,18 @@ namespace Rogue
                 {
                     moveX = 1;
                 }
-                
-                //Check collisions with walls
 
+                //Check collisions with walls
+                //Check collisions with walls
+                int newX = (int)player.position.X + moveX;
+                int newY = (int)player.position.Y + moveY;
+                int index = newX + newY * level01.mapWidth;
+
+                if (level01.mapTiles[index] != 1)
+                {
+                    // The new position is not a floor tile (not walkable), so do not move the player
+                    continue;
+                }
 
                 //Liikutetaan pelaajaa
                 player.Move(moveX, moveY);
