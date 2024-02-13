@@ -33,24 +33,16 @@ namespace Rogue
 
         public Vector2 position;
 
-        public void Move (int moveX, int moveY)
+        public void Move(int moveX, int moveY)
         {
-            PlayerCharacter player = new PlayerCharacter();
-
             // Move the player
-            player.position.X += moveX;
-            player.position.Y += moveY;
-
+            position.X += moveX;
+            position.Y += moveY;
         }
         public void Draw()
         {
-            PlayerCharacter player = new PlayerCharacter();
-
-            // -----------Draw:
-            // Clear the screen so that player appears only in one place
-            Console.Clear();
             // Draw the player
-            Console.SetCursorPosition((int)player.position.X, (int)player.position.Y);
+            Console.SetCursorPosition((int)position.X, (int)position.Y);
             Console.Write("@");
         }
     }

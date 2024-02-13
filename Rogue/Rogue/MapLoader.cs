@@ -23,6 +23,25 @@ namespace Rogue
 
             return test;
         }
+        public Map ReadMapFromFile(string filename)
+        {
+            using (StreamReader reader = File.OpenText(filename))
+            {
+
+                string line;
+                while (true)
+                {
+                    line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break; // End of file
+                    }
+                    Console.WriteLine(line);
+                }
+
+            }
+            return LoadTestMap(); // Return the test map.
+        }
     }
 }
 

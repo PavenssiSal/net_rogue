@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace Rogue
 {
@@ -7,14 +8,16 @@ namespace Rogue
         string Rotu;
         string Luokka;
         string PlayerName;
-        PlayerCharacter player = new PlayerCharacter();
+        public PlayerCharacter player = new PlayerCharacter();
 
         Map level01;
 
-        PlayerCharacter Piirra;
-
         public void Run()
         {
+
+            MapLoader MapReader = new MapLoader();
+            MapReader.ReadMapFromFile("Maps/mapfile.json");
+
             // Nimi valinta (ei hyväksy tyhjää eikä numeroita)
             while (true)
             {
@@ -141,12 +144,15 @@ namespace Rogue
             Console.SetCursorPosition((int)player.position.X, (int)player.position.Y);
             Console.Write("@");
 
+            // ------------Update:
+            // Prepare to read movement input
+
+
             while (true)
             {
-                // ------------Update:
-                // Prepare to read movement input
                 int moveX = 0;
                 int moveY = 0;
+
                 // Wait for keypress and compare value to ConsoleKey enum
                 ConsoleKeyInfo key = Console.ReadKey();
                 if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
@@ -165,13 +171,34 @@ namespace Rogue
                 {
                     moveX = 1;
                 }
+                
+                //Check collisions with walls
 
+
+                //Liikutetaan pelaajaa
                 player.Move(moveX, moveY);
 
-                // -----------Draw:
+                //Estetään pelaaja menemästä kartan ulkopuolelle
+                if (player.position.X < 0)
+                {
+                    player.position.X = 0;
+                }
+                else if (player.position.X > Console.WindowWidth - 1)
+                {
+                    player.position.X = Console.WindowWidth - 1;
+                }
+                if (player.position.Y < 0)
+                {
+                    player.position.Y = 0;
+                }
+                else if (player.position.Y > Console.WindowHeight - 1)
+                {
+                    player.position.Y = Console.WindowHeight - 1;
+                }
+
                 Console.Clear();
-                level01.Draw();
                 // Redraw the player
+                level01.Draw();
                 player.Draw();
             }
         }
