@@ -47,7 +47,7 @@ namespace Rogue
         public Map LoadMapFromFile()
         {
             string mapfile = "Maps/mapfile.json";
-            if (!File.Exists(mapfile))
+            if (File.Exists(mapfile) == false)
             {
                 Console.WriteLine($"File {mapfile} not found");
                 return LoadTestMap(); // Return the test map as fallback
