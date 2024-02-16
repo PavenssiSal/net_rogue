@@ -136,13 +136,12 @@ namespace Rogue
             Console.Clear();
 
             MapLoader loader = new MapLoader();
-            level01 = loader.LoadTestMap();
+            level01 = loader.LoadMapFromFile();
 
             level01.Draw();
 
             // Draw the player
-            Console.SetCursorPosition((int)player.position.X, (int)player.position.Y);
-            Console.Write("¤");
+            player.Draw();
 
             // ------------Update:
             // Prepare to read movement input

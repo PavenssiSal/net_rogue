@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,26 @@ namespace Rogue
 
             }
             return LoadTestMap(); // Return the test map.
+        }
+
+        public Map LoadMapFromFile()
+        {
+            string mapfile = "Maps/mapfile.json";
+            if (!File.Exists(mapfile))
+            {
+                Console.WriteLine($"File {mapfile} not found");
+                return LoadTestMap(); // Return the test map as fallback
+            }
+
+                string fileContents;
+            using (StreamReader reader = File.OpenText(mapfile))
+            {
+                fileContents = reader.ReadToEnd(); // Read all lines into fileContents
+            }
+
+            Map loadedMap = JsonConvert.DeserializeObject<Map>(fileContents);
+
+            return loadedMap;
         }
     }
 }
