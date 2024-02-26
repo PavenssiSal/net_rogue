@@ -16,7 +16,6 @@ namespace Rogue
         {
 
             MapLoader MapReader = new MapLoader();
-            MapReader.ReadMapFromFile("Maps/mapfile.json");
 
             // Nimi valinta (ei hyväksy tyhjää eikä numeroita)
             while (true)
