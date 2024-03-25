@@ -22,7 +22,7 @@ namespace Rogue
     {
         public string PlayerName { get; set; }
         public Race rotu;
-        public Role Luokka;
+        public Role luokka;
 
         public Vector2 position;
 

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
@@ -9,14 +12,10 @@ namespace Rogue
         string Luokka;
         string PlayerName;
         public PlayerCharacter player = new PlayerCharacter();
-
         Map level01;
 
-        public void Run()
+        private string AskName()
         {
-
-            MapLoader MapReader = new MapLoader();
-
             // Nimi valinta (ei hyväksy tyhjää eikä numeroita)
             while (true)
             {
@@ -46,8 +45,11 @@ namespace Rogue
                     break;
                 }
             }
-
-            // Rotu valinta
+            return PlayerName;
+        }
+        // Rotu valinta
+        private Race AskRace(Race rotu)
+        {
             while (true)
             {
                 Console.WriteLine("Valitse rotu");
@@ -81,8 +83,11 @@ namespace Rogue
                     Console.WriteLine("Ei ole olemassa, valitse uudestaan");
                 }
             }
-
-            // Luokka valinta
+            return rotu;
+        }
+        // Luokka valinta
+        private Role AskClass(Role luokka)
+        {
             while (true)
             {
                 Console.WriteLine("Valitse luokka");
@@ -123,29 +128,42 @@ namespace Rogue
                     Console.WriteLine("Ei ole olemassa, valitse uudestaan");
                 }
             }
-
-            Console.WriteLine(PlayerName);
-            Console.WriteLine(Rotu);
-            Console.WriteLine(Luokka);
-
-            // Set player starting position
-            player.position = new Vector2(1, 1);
-
-            //Clear text
+            return luokka;
+        }
+        private PlayerCharacter CreateCharacter()
+        {
+            PlayerCharacter player = new PlayerCharacter();
+            player.PlayerName = AskName();
+            player.rotu = AskRace(player.rotu);
+            player.luokka = AskClass(player.luokka);
+            return player;
+        }
+        public void Run()
+        {
             Console.Clear();
-
+            InIt();
+            GameLoop();
+        }
+        private void InIt()
+        {
+            player = CreateCharacter();
             MapLoader loader = new MapLoader();
             level01 = loader.LoadMapFromFile();
 
+            Raylib.InitWindow(480, 270, "Rogue Game");
+
+            Raylib.SetTargetFPS(30);
+        }
+        private void DrawGame()
+        {
+            Console.Clear();
             level01.Draw();
-
-            // Draw the player
             player.Draw();
-
-            // ------------Update:
-            // Prepare to read movement input
-
-
+        }
+        private void UpdateGame()
+        {
+            // Set player starting position
+            player.position = new Vector2(1, 1);
             while (true)
             {
                 int moveX = 0;
@@ -209,5 +227,13 @@ namespace Rogue
                 player.Draw();
             }
         }
+        private void GameLoop()
+        {
+            while (true)
+            {
+                DrawGame();
+                UpdateGame();
+            } // while(true) ends
+        } // GameLoop ends
     }
 }
