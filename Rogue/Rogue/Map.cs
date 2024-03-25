@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
@@ -14,6 +15,7 @@ namespace Rogue
 
         public void Draw()
         {
+            Raylib.BeginDrawing();
             Console.ForegroundColor = ConsoleColor.Gray; // Change to map color
             int mapHeight = mapTiles.Length / mapWidth; // Calculate the height: the amount of rows
             for (int y = 0; y < mapHeight; y++) // for each row
@@ -39,6 +41,7 @@ namespace Rogue
                     }
                 }
             }
+            Raylib.EndDrawing();
         }
     }
 }

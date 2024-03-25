@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
@@ -28,7 +29,7 @@ namespace Rogue
 
         // Lisätään pelaajalle kuvan ja piirtovärin muuttujat
         public char image;
-        public ConsoleColor drawColor;
+        public Color drawColor;
 
         public void Move(int moveX, int moveY)
         {
@@ -41,13 +42,18 @@ namespace Rogue
         {
             // Pelaajan kuva ja väri
             image = '¤';
-            drawColor = ConsoleColor.Magenta;
-
-            Console.ForegroundColor = drawColor;
+            drawColor = Raylib.MAGENTA; // Set drawColor to Raylib's Color.MAGENTA
 
             // Draw the player
-            Console.SetCursorPosition((int)position.X, (int)position.Y);
-            Console.Write(image);
+            int pixelX = (int)(position.X * Game.tileSize);
+            int pixelY = (int)(position.Y * Game.tileSize);
+
+            // Draw rectangle
+            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, drawColor);
+
+            // Draw character '@'
+            Raylib.DrawText("@", pixelX + (Game.tileSize / 4), pixelY + (Game.tileSize / 4), Game.tileSize, Raylib.WHITE);
+
         }
     }
 }

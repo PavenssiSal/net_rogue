@@ -14,6 +14,8 @@ namespace Rogue
         public PlayerCharacter player = new PlayerCharacter();
         Map level01;
 
+        public static readonly int tileSize = 16;
+
         private string AskName()
         {
             // Nimi valinta (ei hyväksy tyhjää eikä numeroita)
@@ -229,7 +231,7 @@ namespace Rogue
         }
         private void GameLoop()
         {
-            while (true)
+            while (Raylib.WindowShouldClose() == false)
             {
                 DrawGame();
                 UpdateGame();
