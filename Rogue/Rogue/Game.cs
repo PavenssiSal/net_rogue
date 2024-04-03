@@ -158,12 +158,22 @@ namespace Rogue
         }
         private void DrawGame()
         {
+            Raylib.BeginDrawing();
             Console.Clear();
             level01.Draw();
             player.Draw();
+            Raylib.EndDrawing();
         }
         private void UpdateGame()
         {
+            // Read input only if key is available
+            if (Console.KeyAvailable == false)
+            {
+                // No input: Sleep for 33 ms and return.
+                System.Threading.Thread.Sleep(33);
+                return;
+            }
+
             // Set player starting position
             player.position = new Vector2(1, 1);
             while (true)
@@ -171,8 +181,14 @@ namespace Rogue
                 int moveX = 0;
                 int moveY = 0;
 
+
                 // Wait for keypress and compare value to ConsoleKey enum
                 ConsoleKeyInfo key = Console.ReadKey();
+                switch (key)
+                {
+                    //...
+                } // switch(key) ends
+
                 if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
                 {
                     moveY = -1;
@@ -233,8 +249,8 @@ namespace Rogue
         {
             while (Raylib.WindowShouldClose() == false)
             {
-                DrawGame();
                 UpdateGame();
+                DrawGame();
             } // while(true) ends
         } // GameLoop ends
     }

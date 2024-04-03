@@ -4,21 +4,23 @@ using ZeroElectric.Vinculum;
 namespace Rogue
 {
     public enum Race
-        {
-            Human,
-            Elf,
-            Rat,
-            Jesus
-        }
-        public enum Role
-        {
-            Fighter,
-            Swordfighter,
-            Archer,
-            Wizard,
-            ManWithBigWoodenStick,
-            Homeless
-        }
+    {
+        Human,
+        Elf,
+        Rat,
+        Jesus
+    }
+
+    public enum Role
+    {
+        Fighter,
+        Swordfighter,
+        Archer,
+        Wizard,
+        ManWithBigWoodenStick,
+        Homeless
+    }
+
     public class PlayerCharacter
     {
         public string PlayerName { get; set; }
@@ -29,31 +31,41 @@ namespace Rogue
 
         // Lisätään pelaajalle kuvan ja piirtovärin muuttujat
         public char image;
+        public ConsoleColor Color;
+        public Color color;
         public Color drawColor;
 
         public void Move(int moveX, int moveY)
         {
             // Move the player
-            
             position.X += moveX;
             position.Y += moveY;
         }
+
         public void Draw()
         {
-            // Pelaajan kuva ja väri
-            image = '¤';
-            drawColor = Raylib.MAGENTA; // Set drawColor to Raylib's Color.MAGENTA
-
-            // Draw the player
+            // Laske pelaajan kordinaatit pikseleissä
             int pixelX = (int)(position.X * Game.tileSize);
             int pixelY = (int)(position.Y * Game.tileSize);
 
-            // Draw rectangle
+            // Pelaajan väri
+            Color drawColor = Raylib.MAGENTA;
+
+            // Piirrä pelaajan neliö
             Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, drawColor);
 
-            // Draw character '@'
-            Raylib.DrawText("@", pixelX + (Game.tileSize / 4), pixelY + (Game.tileSize / 4), Game.tileSize, Raylib.WHITE);
+            // Piirrä merkki "@"
+            Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.BLUE);
 
+            // Og for testing reasons
+            image = '¤';
+            Color = ConsoleColor.Magenta;
+
+            Console.ForegroundColor = Color;
+
+            // Draw the player
+            Console.SetCursorPosition((int)position.X, (int)position.Y);
+            Console.Write(image);
         }
     }
 }
