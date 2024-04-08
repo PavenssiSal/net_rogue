@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroElectric.Vinculum;
@@ -12,6 +13,8 @@ namespace Rogue
         public int mapWidth;
         public int mapHeight;
         public int[] mapTiles;
+
+        public Vector2 position;
 
         public Color drawColor;
         public void Draw()
@@ -29,22 +32,33 @@ namespace Rogue
                     int index = x + y * mapWidth; // Calculate index of tile at (x, y)
                     int tileId = mapTiles[index]; // Read the tile value at index
 
-                    Rectangle tileRect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 
-                    // Draw the tile graphics
-                    Console.SetCursorPosition(x, y);
+                            int pixelX = (int)(x * tileSize);
+                            int pixelY = (int)(y * tileSize);
+                    void Move(int moveX, int moveY)
+                    {
+                        // Move the player
+                        position.X += moveX;
+                        position.Y += moveY;
+                    }
+
+
                     switch (tileId)
                     {
                         case 1:
-                            Raylib.DrawRectangleRec(tileRect, Raylib.BLANK); // Floor
-                            Raylib.DrawText(".", (int)(tileRect.x + tileSize * 0.5f), (int)(tileRect.y + tileSize * 0), tileSize, Raylib.WHITE);
+
+                            // Floor
+                            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.BLANK);
+
+                          
+                            Raylib.DrawText(".", pixelX + 5, pixelY, tileSize, Raylib.WHITE);
                             break;
                         case 2:
-                            Raylib.DrawRectangleRec(tileRect, Raylib.DARKGRAY); // Wall
-                            Raylib.DrawText("#", (int)(tileRect.x + tileSize * 0), (int)(tileRect.y + tileSize * 0), tileSize, Raylib.WHITE);
+                            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.DARKGRAY); // Wall
+                            Raylib.DrawText("#", pixelX, pixelY, tileSize, Raylib.WHITE);
                             break;
                         default:
-                            Raylib.DrawRectangleRec(tileRect, Raylib.BLANK); ;
+                            Raylib.DrawRectangle(pixelX, pixelY, tileSize, tileSize, Raylib.BLANK); ;
                             break;
                     }
                 }

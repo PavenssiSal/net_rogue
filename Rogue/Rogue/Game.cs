@@ -155,13 +155,17 @@ namespace Rogue
             Raylib.InitWindow(480, 270, "Rogue Game");
 
             Raylib.SetTargetFPS(30);
+            Console.Clear();
+            
         }
         private void DrawGame()
         {
-            level01.Draw();
+            
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Raylib.BLACK);
+            Raylib.ClearBackground(Raylib.BLANK);
+            level01.Draw();
             player.Draw();
+
             Raylib.EndDrawing();
         }
         private void UpdateGame()
@@ -241,7 +245,6 @@ namespace Rogue
                 }
 
                 Console.Clear();
-
                 DrawGame();
             }
         }
@@ -249,7 +252,6 @@ namespace Rogue
         {
             while (Raylib.WindowShouldClose() == false)
             {
-
                 UpdateGame();
                 DrawGame();
             } // while(true) ends
