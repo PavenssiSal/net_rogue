@@ -48,11 +48,8 @@ namespace Rogue
             int pixelX = (int)(position.X * Game.tileSize);
             int pixelY = (int)(position.Y * Game.tileSize);
 
-            // Pelaajan väri
-            Color drawColor = Raylib.MAGENTA;
-
             // Piirrä pelaajan neliö
-            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, drawColor);
+            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.MAGENTA);
 
             // Piirrä merkki "@"
             Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.BLUE);

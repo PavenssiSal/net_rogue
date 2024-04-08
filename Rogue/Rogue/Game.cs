@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using ZeroElectric.Vinculum;
 
 namespace Rogue
@@ -151,16 +152,15 @@ namespace Rogue
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
             level01 = loader.LoadMapFromFile();
-
             Raylib.InitWindow(480, 270, "Rogue Game");
 
             Raylib.SetTargetFPS(30);
         }
         private void DrawGame()
         {
-            Raylib.BeginDrawing();
-            Console.Clear();
             level01.Draw();
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Raylib.BLACK);
             player.Draw();
             Raylib.EndDrawing();
         }
@@ -180,6 +180,7 @@ namespace Rogue
             {
                 int moveX = 0;
                 int moveY = 0;
+                
 
 
                 // Wait for keypress and compare value to ConsoleKey enum
@@ -240,15 +241,15 @@ namespace Rogue
                 }
 
                 Console.Clear();
-                // Redraw the player
-                level01.Draw();
-                player.Draw();
+
+                DrawGame();
             }
         }
         private void GameLoop()
         {
             while (Raylib.WindowShouldClose() == false)
             {
+
                 UpdateGame();
                 DrawGame();
             } // while(true) ends
