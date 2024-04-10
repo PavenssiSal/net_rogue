@@ -14,8 +14,13 @@ namespace Rogue
         string PlayerName;
         public PlayerCharacter player = new PlayerCharacter();
         Map level01;
-
+        
         public static readonly int tileSize = 16;
+
+        // Pelin koko ja renderöintitextuuri
+        int game_width;
+        int game_height;
+        RenderTexture game_screen;
 
         private string AskName()
         {
@@ -152,20 +157,61 @@ namespace Rogue
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
             level01 = loader.LoadMapFromFile();
-            Raylib.InitWindow(480, 270, "Rogue Game");
+
+            // Set the window size
+            game_width = 480;
+            game_height = 270;
+            Raylib.InitWindow(game_width * 2, game_height * 2, "Rogue Game");
+
+            // Load the sprite atlas image
+            Texture Character = Raylib.LoadTexture("Images/tilemap.png");
+
+            // Set the player's image and pixel coordinates
+            player.SetImageAndIndex(Character, 12, 7);
+
+
+            // Create render texture and set filtering
+            game_screen = Raylib.LoadRenderTexture(game_width, game_height);
+            Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
 
             Raylib.SetTargetFPS(30);
             Console.Clear();
-            
         }
+
         private void DrawGame()
         {
-            
-            Raylib.BeginDrawing();
+
+            // Piirrä peli renderöintitextuuriin
+            Raylib.BeginTextureMode(game_screen);
             Raylib.ClearBackground(Raylib.BLANK);
             level01.Draw();
             player.Draw();
+            Raylib.EndTextureMode();
 
+            // Piirrä peli skaalattuna ruudulle
+            DrawGameScaled();
+        }
+
+        private void DrawGameScaled()
+        {
+            // Piirrä peli skaalattuna ruudulle
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Raylib.BLANK);
+
+            // Lasketaan skaala
+            int draw_width = Raylib.GetScreenWidth();
+            int draw_height = Raylib.GetScreenHeight();
+            float scale = Math.Min((float)draw_width / game_width, (float)draw_height / game_height);
+
+            // Lasketaan piirrettävän alueen sijainti ja koko
+            Rectangle source = new Rectangle(0, 0, game_width, -game_height);
+            Rectangle destination = new Rectangle((draw_width - game_width * scale) * 0.5f,
+                                                   (draw_height - game_height * scale) * 0.5f,
+                                                   game_width * scale,
+                                                   game_height * scale);
+
+            // Piirrä renderöintitextuuri skaalattuna ruudulle
+            Raylib.DrawTexturePro(game_screen.texture, source, destination, Vector2.Zero, 0f, Raylib.WHITE);
             Raylib.EndDrawing();
         }
         private void UpdateGame()
