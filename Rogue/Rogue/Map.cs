@@ -19,7 +19,6 @@ namespace Rogue
         public Color drawColor;
         public void Draw()
         {
-            Raylib.BeginDrawing();
             Console.ForegroundColor = ConsoleColor.Gray; // Change to map color
             int mapHeight = mapTiles.Length / mapWidth; // Calculate the height: the amount of rows
 
@@ -49,8 +48,6 @@ namespace Rogue
 
                             // Floor
                             Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.BLANK);
-
-                          
                             Raylib.DrawText(".", pixelX + 5, pixelY, tileSize, Raylib.WHITE);
                             break;
                         case 2:
@@ -63,7 +60,7 @@ namespace Rogue
                     }
                 }
             }
-            Raylib.EndDrawing();
+            
         }
     }
 }

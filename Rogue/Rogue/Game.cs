@@ -184,8 +184,6 @@ namespace Rogue
             {
                 int moveX = 0;
                 int moveY = 0;
-                
-
 
                 // Wait for keypress and compare value to ConsoleKey enum
                 ConsoleKeyInfo key = Console.ReadKey();
