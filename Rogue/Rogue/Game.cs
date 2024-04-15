@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using ZeroElectric.Vinculum;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Rogue
 {
@@ -151,6 +152,8 @@ namespace Rogue
             Console.Clear();
             InIt();
             GameLoop();
+
+
         }
         private void InIt()
         {
@@ -166,9 +169,8 @@ namespace Rogue
             // Load the sprite atlas image
             Texture Character = Raylib.LoadTexture("Images/tilemap.png");
 
-            // Set the player's image and pixel coordinates
-            player.SetImageAndIndex(Character, 12, 7);
-
+            
+            player.SetImageAndIndex(Character, 16, 7, 0);
 
             // Create render texture and set filtering
             game_screen = Raylib.LoadRenderTexture(game_width, game_height);
@@ -178,6 +180,7 @@ namespace Rogue
             Console.Clear();
         }
 
+
         private void DrawGame()
         {
 
@@ -186,6 +189,7 @@ namespace Rogue
             Raylib.ClearBackground(Raylib.BLANK);
             level01.Draw();
             player.Draw();
+            
             Raylib.EndTextureMode();
 
             // Piirrä peli skaalattuna ruudulle

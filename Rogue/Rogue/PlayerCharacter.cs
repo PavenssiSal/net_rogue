@@ -47,18 +47,21 @@ namespace Rogue
             position.Y += moveY;
         }
 
-        public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
+        public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int rowIndex, int colIndex)
         {
             image = atlasImage;
-            imagePixelX = (index % imagesPerRow) * Game.tileSize;
-            imagePixelY = (int)(index / imagesPerRow) * Game.tileSize;
+            imagePixelX = colIndex * Game.tileSize;
+            imagePixelY = rowIndex * Game.tileSize;
         }
+
 
         public void Draw()
         {
             // Laske pelaajan kordinaatit pikseleissä
             int pixelX = (int)(position.X * Game.tileSize);
             int pixelY = (int)(position.Y * Game.tileSize);
+
+            Raylib.DrawTextureRec(image, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize), position, Raylib.WHITE);
 
             Raylib.DrawTexture(image, pixelX, pixelY, drawColor);
 
@@ -68,16 +71,6 @@ namespace Rogue
 
             // Piirrä merkki "@"
             Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.BLUE);
-
-            // Og for testing reasons
-            Picture = '¤';
-            Color = ConsoleColor.Magenta;
-
-            Console.ForegroundColor = Color;
-
-            // Draw the player
-            Console.SetCursorPosition((int)position.X, (int)position.Y);
-            Console.Write(Picture);
         }
     }
 }
