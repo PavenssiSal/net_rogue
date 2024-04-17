@@ -16,6 +16,9 @@
     <None Update="Images\tilemap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Images\tilemap_packed.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Images\TX Props.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

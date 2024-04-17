@@ -167,10 +167,10 @@ namespace Rogue
             Raylib.InitWindow(game_width * 2, game_height * 2, "Rogue Game");
 
             // Load the sprite atlas image
-            Texture Character = Raylib.LoadTexture("Images/tilemap.png");
+            Texture Character = Raylib.LoadTexture("Images/tilemap_packed.png");
 
             
-            player.SetImageAndIndex(Character, 16, 7, 0);
+            player.SetImageAndIndex(Character, 1, 0);
 
             // Create render texture and set filtering
             game_screen = Raylib.LoadRenderTexture(game_width, game_height);

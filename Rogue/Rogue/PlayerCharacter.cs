@@ -39,6 +39,15 @@ namespace Rogue
         int imagePixelX;
         int imagePixelY;
 
+        int imagesPerRow = 12;
+        int tileSize = 16;
+        // indeksit ovat:
+        // 0, 1
+        // 2, 3
+        int atlasIndex;
+
+        
+
 
         public void Move(int moveX, int moveY)
         {
@@ -47,30 +56,45 @@ namespace Rogue
             position.Y += moveY;
         }
 
-        public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int rowIndex, int colIndex)
+        public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
         {
             image = atlasImage;
-            imagePixelX = colIndex * Game.tileSize;
-            imagePixelY = rowIndex * Game.tileSize;
+            imagePixelX = (index % imagesPerRow) * Game.tileSize;
+            imagePixelY = (int)(index / imagesPerRow) * Game.tileSize;
         }
+
 
 
         public void Draw()
         {
+
+            atlasIndex = 1 + 10 * imagesPerRow;
+
+
+            // Laske kuvan kohta
+            int imageX = atlasIndex % imagesPerRow;
+            int imageY = (int)(atlasIndex / imagesPerRow); 
+            int imagePixelX = imageX * tileSize; 
+            int imagePixelY = imageY * tileSize; 
+
             // Laske pelaajan kordinaatit pikseleissä
             int pixelX = (int)(position.X * Game.tileSize);
             int pixelY = (int)(position.Y * Game.tileSize);
 
-            Raylib.DrawTextureRec(image, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize), position, Raylib.WHITE);
+            Vector2 pixelPosition = new Vector2(pixelX, pixelY);
 
-            Raylib.DrawTexture(image, pixelX, pixelY, drawColor);
+            Rectangle imageRect = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
+
+            Raylib.DrawTextureRec(image, imageRect, pixelPosition, Raylib.WHITE);
+
+            //Raylib.DrawTexture(image, pixelX, pixelY,  drawColor);
 
 
             // Piirrä pelaajan neliö
-            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.MAGENTA);
+            //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.MAGENTA);
 
             // Piirrä merkki "@"
-            Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.BLUE);
+            //Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.BLUE);
         }
     }
 }
