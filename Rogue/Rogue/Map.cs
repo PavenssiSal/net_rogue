@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroElectric.Vinculum;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Rogue
 {
@@ -17,22 +18,70 @@ namespace Rogue
         public Vector2 position;
 
         public Color drawColor;
+
+        Texture image;
+        int imagePixelX;
+        int imagePixelY;
+
+        int imagesPerRow = 12;
+        int tileSize = 16;
+        // indeksit ovat:
+        // 0, 1
+        // 2, 3
+        int atlasIndex;
+        int atlasIndex2;
+
+        public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
+        {
+            image = atlasImage;
+            imagePixelX = (index % imagesPerRow) * Game.tileSize;
+            imagePixelY = (int)(index / imagesPerRow) * Game.tileSize;
+        }
         public void Draw()
         {
             Console.ForegroundColor = ConsoleColor.Gray; // Change to map color
             int mapHeight = mapTiles.Length / mapWidth; // Calculate the height: the amount of rows
 
-            int tileSize = 16;
+            atlasIndex = 4 + 3 * imagesPerRow;
+            atlasIndex2 = 0 + 4 * imagesPerRow;
+            
+
+            // Laske kuvan kohta
+
+            //Seinän
+            int WallX = atlasIndex % imagesPerRow;
+            int WallY = (int)(atlasIndex / imagesPerRow);
+            int imagePixelX = WallX * tileSize;
+            int imagePixelY = WallY * tileSize;
+            
+            //Lattian
+            int FloorX = atlasIndex2 % imagesPerRow;
+            int FloorY = (int)(atlasIndex2 / imagesPerRow);
+            int imagePixelXB = FloorX * tileSize;
+            int imagePixelYB = FloorY * tileSize;
+
+            Rectangle WallTexture = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
+
+            Rectangle FloorTexture = new Rectangle(imagePixelXB, imagePixelYB, Game.tileSize, Game.tileSize);
+
+
+
             for (int y = 0; y < mapHeight; y++) // for each row
             {
                 for (int x = 0; x < mapWidth; x++) // for each column in the row
                 {
 
                     int index = x + y * mapWidth; // Calculate index of tile at (x, y)
+
                     int tileId = mapTiles[index]; // Read the tile value at index
+                    if (tileId == 0)
+                    {
+                        continue;
+                    }
+                    int tileIndex = tileId - 1;
+                    // Laske palan pikselikordinaatit kuvassa tileIndex;in avulla
 
-
-                            int pixelX = (int)(x * tileSize);
+                    int pixelX = (int)(x * tileSize);
                             int pixelY = (int)(y * tileSize);
                     void Move(int moveX, int moveY)
                     {
@@ -41,18 +90,21 @@ namespace Rogue
                         position.Y += moveY;
                     }
 
+                    Vector2 pixelPosition = new Vector2(pixelX, pixelY);
 
                     switch (tileId)
                     {
-                        case 1:
+                        case 5:
 
                             // Floor
-                            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.BLANK);
-                            Raylib.DrawText(".", pixelX + 5, pixelY, tileSize, Raylib.WHITE);
+                            //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.BLANK);
+                            //Raylib.DrawText(".", pixelX + 5, pixelY, tileSize, Raylib.WHITE);
+                            Raylib.DrawTextureRec(image, FloorTexture, pixelPosition, Raylib.WHITE);
                             break;
-                        case 2:
-                            Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.DARKGRAY); // Wall
-                            Raylib.DrawText("#", pixelX, pixelY, tileSize, Raylib.WHITE);
+                        case 8:
+                            //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.DARKGRAY); // Wall
+                            //Raylib.DrawText("#", pixelX, pixelY, tileSize, Raylib.WHITE);
+                            Raylib.DrawTextureRec(image, WallTexture, pixelPosition, Raylib.WHITE);
                             break;
                         default:
                             Raylib.DrawRectangle(pixelX, pixelY, tileSize, tileSize, Raylib.BLANK); ;

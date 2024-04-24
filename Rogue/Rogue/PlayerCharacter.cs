@@ -63,7 +63,11 @@ namespace Rogue
             imagePixelY = (int)(index / imagesPerRow) * Game.tileSize;
         }
 
-
+        public enum MapTile : int
+        {
+            Floor = 5,
+            Wall = 8
+        }
 
         public void Draw()
         {

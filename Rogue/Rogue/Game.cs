@@ -169,8 +169,13 @@ namespace Rogue
             // Load the sprite atlas image
             Texture Character = Raylib.LoadTexture("Images/tilemap_packed.png");
 
+            Texture Wall = Raylib.LoadTexture("Images/tilemap_packed.png");
+            Texture Floor = Raylib.LoadTexture("Images/tilemap_packed.png");
+
             
             player.SetImageAndIndex(Character, 1, 0);
+            level01.SetImageAndIndex(Wall, 1, 0);
+            level01.SetImageAndIndex(Floor, 1, 0);
 
             // Create render texture and set filtering
             game_screen = Raylib.LoadRenderTexture(game_width, game_height);
@@ -235,26 +240,19 @@ namespace Rogue
                 int moveX = 0;
                 int moveY = 0;
 
-                // Wait for keypress and compare value to ConsoleKey enum
-                ConsoleKeyInfo key = Console.ReadKey();
-                switch (key)
-                {
-                    //...
-                } // switch(key) ends
-
-                if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_UP) || Raylib.IsKeyPressed(KeyboardKey.KEY_W))
                 {
                     moveY = -1;
                 }
-                else if (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_DOWN) || Raylib.IsKeyPressed(KeyboardKey.KEY_S))
                 {
                     moveY = 1;
                 }
-                else if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.A)
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_LEFT) || Raylib.IsKeyPressed(KeyboardKey.KEY_S))
                 {
                     moveX = -1;
                 }
-                else if (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_RIGHT) || Raylib.IsKeyPressed(KeyboardKey.KEY_D))
                 {
                     moveX = 1;
                 }
@@ -265,7 +263,7 @@ namespace Rogue
                 int newY = (int)player.position.Y + moveY;
                 int index = newX + newY * level01.mapWidth;
 
-                if (level01.mapTiles[index] != 1)
+                if (level01.mapTiles[index] != 5)
                 {
                     // The new position is not a floor tile (not walkable), so do not move the player
                     continue;
