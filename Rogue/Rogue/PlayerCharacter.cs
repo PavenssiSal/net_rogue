@@ -90,15 +90,6 @@ namespace Rogue
             Rectangle imageRect = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
 
             Raylib.DrawTextureRec(image, imageRect, pixelPosition, Raylib.WHITE);
-
-            //Raylib.DrawTexture(image, pixelX, pixelY,  drawColor);
-
-
-            // Piirrä pelaajan neliö
-            //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.MAGENTA);
-
-            // Piirrä merkki "@"
-            //Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.BLUE);
         }
     }
 }

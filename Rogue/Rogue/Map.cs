@@ -107,7 +107,6 @@ namespace Rogue
                             Raylib.DrawTextureRec(image, WallTexture, pixelPosition, Raylib.WHITE);
                             break;
                         default:
-                            Raylib.DrawRectangle(pixelX, pixelY, tileSize, tileSize, Raylib.BLANK); ;
                             break;
                     }
                 }

@@ -4,7 +4,6 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using ZeroElectric.Vinculum;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Rogue
 {
@@ -225,14 +224,6 @@ namespace Rogue
         }
         private void UpdateGame()
         {
-            // Read input only if key is available
-            if (Console.KeyAvailable == false)
-            {
-                // No input: Sleep for 33 ms and return.
-                System.Threading.Thread.Sleep(33);
-                return;
-            }
-
             // Set player starting position
             player.position = new Vector2(1, 1);
             while (true)
@@ -248,7 +239,7 @@ namespace Rogue
                 {
                     moveY = 1;
                 }
-                if (Raylib.IsKeyPressed(KeyboardKey.KEY_LEFT) || Raylib.IsKeyPressed(KeyboardKey.KEY_S))
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_LEFT) || Raylib.IsKeyPressed(KeyboardKey.KEY_A))
                 {
                     moveX = -1;
                 }
@@ -266,7 +257,8 @@ namespace Rogue
                 if (level01.mapTiles[index] != 5)
                 {
                     // The new position is not a floor tile (not walkable), so do not move the player
-                    continue;
+                    moveX = 0; moveY = 0;
+                    
                 }
 
                 //Liikutetaan pelaajaa
