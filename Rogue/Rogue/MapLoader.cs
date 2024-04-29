@@ -9,21 +9,22 @@ namespace Rogue
 {
     public class MapLoader
     {
-        public Map LoadTestMap()
-        {
-            Map test = new Map();
-            test.mapWidth = 8;
-            test.mapTiles = new int[] {
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 1, 1, 2, 1, 1, 1, 2,
-                2, 1, 1, 2, 1, 1, 1, 2,
-                2, 1, 1, 1, 1, 1, 2, 2,
-                2, 2, 2, 2, 1, 1, 1, 2,
-                2, 1, 1, 1, 1, 1, 1, 2,
-                2, 2, 2, 2, 2, 2, 2, 2 };
+        //public Map LoadTestMap()
+        //{
 
-            return test;
-        }
+        //    Map test = new Map();
+        //    test.mapWidth = 8;
+        //    test.mapTiles = new int[] {
+        //        2, 2, 2, 2, 2, 2, 2, 2,
+        //        2, 1, 1, 2, 1, 1, 1, 2,
+        //        2, 1, 1, 2, 1, 1, 1, 2,
+        //        2, 1, 1, 1, 1, 1, 2, 2,
+        //        2, 2, 2, 2, 1, 1, 1, 2,
+        //        2, 1, 1, 1, 1, 1, 1, 2,
+        //        2, 2, 2, 2, 2, 2, 2, 2 };
+
+        //    return test;
+        //}
         public Map ReadMapFromFile(string filename)
         {
             using (StreamReader reader = File.OpenText(filename))
@@ -41,16 +42,16 @@ namespace Rogue
                 }
 
             }
-            return LoadTestMap(); // Return the test map.
+            return null; // Return the test map.
         }
 
         public Map LoadMapFromFile()
         {
-            string mapfile = "Maps/mapfile.json";
+            string mapfile = "Maps/mapfile_layers.json";
             if (File.Exists(mapfile) == false)
             {
                 Console.WriteLine($"File {mapfile} not found");
-                return LoadTestMap(); // Return the test map as fallback
+                 // Return the test map as fallback
             }
 
                 string fileContents;

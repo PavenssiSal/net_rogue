@@ -5,15 +5,33 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroElectric.Vinculum;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Rogue
 {
+    public class MapLayer
+    {
+        public string name;
+        public int[] mapTiles;
+    }
+
     public class Map
     {
         public int mapWidth;
         public int mapHeight;
-        public int[] mapTiles;
+        public MapLayer[] layers;
+
+        public MapLayer GetLayer(string layerName)
+        {
+            for (int i = 0; i < layers.Length; i++)
+            {
+                if (layers[i].name == layerName)
+                {
+                    return layers[i];
+                }
+            }
+            Console.WriteLine($"Error: No layer with name: {layerName}");
+           return null; // Wanted layer was not found!
+        }
 
         public Vector2 position;
 
@@ -39,11 +57,13 @@ namespace Rogue
         }
         public void Draw()
         {
-            Console.ForegroundColor = ConsoleColor.Gray; // Change to map color
+            MapLayer groundLayer = GetLayer("ground");
+            int[] mapTiles = groundLayer.mapTiles;
+            
             int mapHeight = mapTiles.Length / mapWidth; // Calculate the height: the amount of rows
 
             atlasIndex = 4 + 3 * imagesPerRow;
-            atlasIndex2 = 0 + 4 * imagesPerRow;
+            atlasIndex2 = 1 + 4 * imagesPerRow;
             
 
             // Laske kuvan kohta

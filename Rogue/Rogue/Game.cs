@@ -22,6 +22,8 @@ namespace Rogue
         int game_height;
         RenderTexture game_screen;
 
+        
+
         private string AskName()
         {
             // Nimi valinta (ei hyväksy tyhjää eikä numeroita)
@@ -156,6 +158,7 @@ namespace Rogue
         }
         private void InIt()
         {
+
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
             level01 = loader.LoadMapFromFile();
@@ -254,11 +257,13 @@ namespace Rogue
                 int newY = (int)player.position.Y + moveY;
                 int index = newX + newY * level01.mapWidth;
 
-                if (level01.mapTiles[index] != 5)
+                //Most definitely not the intended way, but it works
+                MapLayer layer = level01.GetLayer("ground");
+
+                if (layer.mapTiles[index] != 5)
                 {
                     // The new position is not a floor tile (not walkable), so do not move the player
                     moveX = 0; moveY = 0;
-                    
                 }
 
                 //Liikutetaan pelaajaa
