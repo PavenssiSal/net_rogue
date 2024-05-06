@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rogue.Images;
+using System;
 using System.ComponentModel.Design;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -21,8 +22,7 @@ namespace Rogue
         int game_width;
         int game_height;
         RenderTexture game_screen;
-
-        
+       
 
         private string AskName()
         {
@@ -162,6 +162,7 @@ namespace Rogue
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
             level01 = loader.LoadMapFromFile();
+            
 
             // Set the window size
             game_width = 480;
@@ -173,11 +174,16 @@ namespace Rogue
 
             Texture Wall = Raylib.LoadTexture("Images/tilemap_packed.png");
             Texture Floor = Raylib.LoadTexture("Images/tilemap_packed.png");
+            Texture Items = Raylib.LoadTexture("Images/tilemap_packed.png");
 
-            
+            Texture spriteAtlas = Raylib.LoadTexture("Images/tilemap_packed.png");
+
+
             player.SetImageAndIndex(Character, 1, 0);
             level01.SetImageAndIndex(Wall, 1, 0);
             level01.SetImageAndIndex(Floor, 1, 0);
+            level01.SetImageAndIndex(Items, 1, 0);
+            level01.LoadEnemiesAndItems(spriteAtlas);
 
             // Create render texture and set filtering
             game_screen = Raylib.LoadRenderTexture(game_width, game_height);
@@ -259,11 +265,30 @@ namespace Rogue
 
                 //Most definitely not the intended way, but it works
                 MapLayer layer = level01.GetLayer("ground");
+                MapLayer Itemlayer = level01.GetLayer("items");
 
                 if (layer.mapTiles[index] != 5)
                 {
                     // The new position is not a floor tile (not walkable), so do not move the player
                     moveX = 0; moveY = 0;
+                }
+
+                // Tarkista, onko uudessa ruudussa vihollinen
+                Enemy enemy = level01.GetEnemyAt(newX, newY);
+                if (enemy != null)
+                {
+                    Console.WriteLine($"You hit an enemy: {enemy.name}");
+                }
+                bool lukko = true;
+                // Tarkista, onko uudessa ruudussa esine
+                Items item = level01.GetItemAt(newX, newY);
+                if (item != null)
+                {
+                    while (lukko = true)
+                    {
+                        Console.WriteLine($"You find an item: {item.name}");
+                        break;
+                    }
                 }
 
                 //Liikutetaan pelaajaa
@@ -287,7 +312,7 @@ namespace Rogue
                     player.position.Y = Console.WindowHeight - 1;
                 }
 
-                Console.Clear();
+               // Console.Clear();
                 DrawGame();
             }
         }

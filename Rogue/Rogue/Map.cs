@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rogue.Images;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -8,6 +9,7 @@ using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
+
     public class MapLayer
     {
         public string name;
@@ -19,6 +21,9 @@ namespace Rogue
         public int mapWidth;
         public int mapHeight;
         public MapLayer[] layers;
+
+        List<Enemy> enemies;
+        List<Items> items;
 
         public MapLayer GetLayer(string layerName)
         {
@@ -48,6 +53,7 @@ namespace Rogue
         // 2, 3
         int atlasIndex;
         int atlasIndex2;
+        
 
         public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
         {
@@ -55,16 +61,88 @@ namespace Rogue
             imagePixelX = (index % imagesPerRow) * Game.tileSize;
             imagePixelY = (int)(index / imagesPerRow) * Game.tileSize;
         }
+
+        public void LoadEnemiesAndItems(Texture spriteAtlas)
+        {
+            enemies = new List<Enemy>();
+            items = new List<Items>();
+
+            MapLayer enemyLayer = GetLayer("enemies");
+            MapLayer itemLayer = GetLayer("items");
+
+            int[] enemyTiles = enemyLayer.mapTiles;
+            int[] itemTiles = itemLayer.mapTiles;
+
+            int mapHeight = enemyTiles.Length / mapWidth;
+
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    // Laske paikka valmiiksi
+                    Vector2 position = new Vector2(x, y);
+
+                    int index = x + y * mapWidth;
+                    int enemyTileId = enemyTiles[index];
+                    int itemTileId = itemTiles[index];
+
+                    if (enemyTileId != 0)
+                    {
+                        // Tässä kohdassa kenttää on vihollinen
+                        // enemyTileId voi olla sama kuin drawIndex
+                        enemies.Add(new Enemy("Gandalf the purple", position, spriteAtlas, enemyTileId));
+                    }
+
+                    if (itemTileId != 0)
+                    {
+                        // Tässä kohdassa kenttää on esine
+                        // itemTileId voi olla sama kuin drawIndex
+                        items.Add(new Items("Potion", position, spriteAtlas, itemTileId));
+                    }
+                }
+            }
+        }
+
+        internal Enemy GetEnemyAt(int x, int y)
+        {
+            foreach (Enemy enemy in enemies)
+            {
+                if (enemy.position.X == x && enemy.position.Y == y)
+                {
+                    return enemy;
+                }
+            }
+            return null;
+        }
+
+        internal Items GetItemAt(int x, int y)
+        {
+            foreach (Items item in items)
+            {
+                if (item.position.X == x && item.position.Y == y)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+
+
         public void Draw()
         {
             MapLayer groundLayer = GetLayer("ground");
             int[] mapTiles = groundLayer.mapTiles;
+
+
             
+
             int mapHeight = mapTiles.Length / mapWidth; // Calculate the height: the amount of rows
 
             atlasIndex = 4 + 3 * imagesPerRow;
             atlasIndex2 = 1 + 4 * imagesPerRow;
             
+
 
             // Laske kuvan kohta
 
@@ -80,9 +158,13 @@ namespace Rogue
             int imagePixelXB = FloorX * tileSize;
             int imagePixelYB = FloorY * tileSize;
 
+        
+
             Rectangle WallTexture = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
 
             Rectangle FloorTexture = new Rectangle(imagePixelXB, imagePixelYB, Game.tileSize, Game.tileSize);
+
+         
 
 
 
@@ -131,7 +213,18 @@ namespace Rogue
                     }
                 }
             }
-            
+
+            // Piirretään sitten esineet
+            foreach (Items item in items)
+            {
+                item.Draw();
+            }
+
+            // Lopuksi piirretään viholliset
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Draw();
+            }
         }
     }
 }
