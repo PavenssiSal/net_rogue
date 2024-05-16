@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZeroElectric.Vinculum;
 
-namespace Rogue.Images
+namespace Rogue
 {
     internal class Items
     {
@@ -24,7 +24,7 @@ namespace Rogue.Images
             this.name = name;
             this.position = position;
             this.graphics = graphics;
-            this.DrawIndex = drawIndex;
+            DrawIndex = drawIndex;
         }
 
         public void Draw()
@@ -33,7 +33,7 @@ namespace Rogue.Images
 
             // Laske kuvan kohta
             int imageX = atlasIndex % imagesPerRow;
-            int imageY = (int)(atlasIndex / imagesPerRow);
+            int imageY = atlasIndex / imagesPerRow;
             int imagePixelX = imageX * tileSize;
             int imagePixelY = imageY * tileSize;
 

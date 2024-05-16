@@ -6,6 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using ZeroElectric.Vinculum;
 
+
+using TurboMapReader;
+
 namespace Rogue
 {
     public class Game
@@ -150,7 +153,7 @@ namespace Rogue
         }
         public void Run()
         {
-            Console.Clear();
+            //Console.Clear();
             InIt();
             GameLoop();
 
@@ -162,7 +165,10 @@ namespace Rogue
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
             level01 = loader.LoadMapFromFile();
-            
+
+            TurboMapReader.TiledMap tileMap = TurboMapReader.MapReader.LoadMapFromFile("Maps/Rogue_map.json");
+
+
 
             // Set the window size
             game_width = 480;
@@ -190,7 +196,7 @@ namespace Rogue
             Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
 
             Raylib.SetTargetFPS(30);
-            Console.Clear();
+            //Console.Clear();
         }
 
 
@@ -312,7 +318,6 @@ namespace Rogue
                     player.position.Y = Console.WindowHeight - 1;
                 }
 
-               // Console.Clear();
                 DrawGame();
             }
         }

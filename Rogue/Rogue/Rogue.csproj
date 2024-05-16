@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\TurboMapReader-main\TurboMapReader.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Images\tilemap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -34,10 +38,7 @@
     <None Update="Maps\mapfile_layers.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Maps\Rogue_map..tmj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Maps\tilemap_packed..tsj">
+    <None Update="Maps\Rogue_map.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

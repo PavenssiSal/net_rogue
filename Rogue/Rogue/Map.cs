@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroElectric.Vinculum;
+using TurboMapReader;
 
 namespace Rogue
 {
@@ -90,14 +91,14 @@ namespace Rogue
                     {
                         // Tässä kohdassa kenttää on vihollinen
                         // enemyTileId voi olla sama kuin drawIndex
-                        enemies.Add(new Enemy("Gandalf the purple", position, spriteAtlas, enemyTileId));
+                        enemies.Add(new Enemy("Enemy", position, spriteAtlas, enemyTileId));
                     }
 
                     if (itemTileId != 0)
                     {
                         // Tässä kohdassa kenttää on esine
                         // itemTileId voi olla sama kuin drawIndex
-                        items.Add(new Items("Potion", position, spriteAtlas, itemTileId));
+                        items.Add(new Items("Item", position, spriteAtlas, itemTileId));
                     }
                 }
             }
