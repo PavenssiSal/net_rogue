@@ -19,6 +19,17 @@ namespace Rogue
 
     public class Map
     {
+            // Uusi muuttuja, joka viittaa TiledMap olioon
+            TurboMapReader.TiledMap tiledMap;
+
+
+            public int GetTileAt(int x, int y)
+            {
+                TurboMapReader.MapLayer ground = tiledMap.GetLayerByName("ground");
+                return ground.data[y * ground.width + x];
+            }
+        
+
         public int mapWidth;
         public int mapHeight;
         public MapLayer[] layers;

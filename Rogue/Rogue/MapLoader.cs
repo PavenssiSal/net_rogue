@@ -10,7 +10,6 @@ namespace Rogue
 {
     public class MapLoader
     {
-        
 
         //public Map LoadTestMap()
         //{
@@ -50,6 +49,7 @@ namespace Rogue
         
         public Map LoadMapFromFile()
         {
+            
 
             string mapfile = "Maps/mapfile_layers.json";
             if (File.Exists(mapfile) == false)
@@ -73,28 +73,8 @@ namespace Rogue
             return loadedMap;
         }
 
-        public Map LoadTiledMapFromFile(string filename) 
-        {
-            TurboMapReader.TiledMap tiledMap = TurboMapReader.MapReader.LoadMapFromFile("Maps/Rogue_map.json");
+        
 
-            if (tiledMap == null)
-            {
-                //Error
-                Console.WriteLine("You stoopid");
-            }
-
-            int mapWidth = tiledMap.width;
-            int mapHeight = tiledMap.height;
-
-            TurboMapReader.MapLayer groundLayer = tiledMap.GetLayerByName("ground");
-            int howManyTiles = groundLayer.data.Length;
-            int[] groundTiles = groundLayer.data;
-
-            MapLayer myGroundLayer = new MapLayer();
-            myGroundLayer.mapTiles = new int[howManyTiles];
-            //Siirrä palat jollain tavalla...
-
-        }
     }
 }
 

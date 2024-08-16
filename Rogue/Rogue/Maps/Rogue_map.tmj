@@ -56,7 +56,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":20,
          "id":2,
-         "name":"enemies",
+         "name":"Enemy",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -87,7 +87,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":20,
          "id":3,
-         "name":"items",
+         "name":"Items",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -104,7 +104,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/..\/..\/Maps\/tilemap_packed.json"
+         "source":"..\/..\/..\/..\/tilemap_packed.tsx"
         }],
  "tilewidth":16,
  "type":"map",

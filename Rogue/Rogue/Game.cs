@@ -161,14 +161,11 @@ namespace Rogue
         }
         private void InIt()
         {
+            TiledMap tileMap = MapReader.LoadMapFromFile("Maps/Rogue_map.json");
 
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
             level01 = loader.LoadMapFromFile();
-
-            TurboMapReader.TiledMap tileMap = TurboMapReader.MapReader.LoadMapFromFile("Maps/Rogue_map.json");
-
-
 
             // Set the window size
             game_width = 480;
