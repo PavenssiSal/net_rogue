@@ -27,26 +27,27 @@ namespace Rogue
 
         //    return test;
         //}
-        Map ReadMapFromFile(string filename)
+        public Map? ReadMapFromFile()
         {
-            using (StreamReader reader = File.OpenText(filename))
+            // Lataa tiedosto käyttäen TurboMapReaderia   
+            TurboMapReader.TiledMap turboMap = MapReader.LoadMapFromFile("Maps/Rogue_map.json");
+
+            // Tarkista onnistuiko lataaminen
+            if (turboMap != null)
             {
-
-                string line;
-                while (true)
-                {
-                    line = reader.ReadLine();
-                    if (line == null)
-                    {
-                        break; // End of file
-                    }
-                    Console.WriteLine(line);
-                }
-
+                // Muuta Map olioksi ja palauta
+                Console.WriteLine("Succesess");
+                return ConvertTiledMapToMap(turboMap);
+                
             }
-            return null; // Return the test map.
+            else
+            {
+                // OH NO!
+                Console.WriteLine("Úff");
+                return null;
+            }
         }
-        
+
         public Map LoadMapFromFile()
         {
             
@@ -73,7 +74,42 @@ namespace Rogue
             return loadedMap;
         }
 
-        
+        public Map ConvertTiledMapToMap(TiledMap turbomap)
+        {
+            // Luo tyhjä kenttä
+            Map roguemap = new Map();
+            // Varaa tilaa kolmelle tasolle
+            roguemap.layers = new MapLayer[3];
+
+            // Muunna tason "ground" tiedot
+            TurboMapReader.MapLayer groundLayer = turbomap.GetLayerByName("ground");
+
+            // TODO: Lue kentän leveys. Kaikilla TurboMapReader.MapLayer olioilla on sama leveys
+
+            // Kuinka monta kenttäpalaa tässä tasossa on?
+            int howManyTiles = groundLayer.data.Length;
+            // Taulukko jossa palat ovat
+            int[] groundTiles = groundLayer.data;
+
+            // Luo uusi taso tietojen perusteella
+            MapLayer myGroundLayer = new MapLayer();
+            myGroundLayer.name = "ground";
+            myGroundLayer.mapTiles = new int[howManyTiles];
+
+
+            // TODO: lue tason palat
+
+
+
+            // Tallenna taso kenttään
+            roguemap.layers[0] = myGroundLayer;
+
+            // TODO: Muunna tason "enemies" tiedot...
+            // TODO: Muunna tason "items" tiedot...
+
+            // Lopulta palauta kenttä
+            return roguemap;
+        }
 
     }
 }

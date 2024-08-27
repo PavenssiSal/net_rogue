@@ -18,14 +18,14 @@ namespace Rogue
         string PlayerName;
         public PlayerCharacter player = new PlayerCharacter();
         Map level01;
-        
+
         public static readonly int tileSize = 16;
 
         // Pelin koko ja renderöintitextuuri
         int game_width;
         int game_height;
         RenderTexture game_screen;
-       
+
 
         private string AskName()
         {
@@ -151,6 +151,7 @@ namespace Rogue
             player.luokka = AskClass(player.luokka);
             return player;
         }
+
         public void Run()
         {
             //Console.Clear();
@@ -161,7 +162,7 @@ namespace Rogue
         }
         private void InIt()
         {
-            TiledMap tileMap = MapReader.LoadMapFromFile("Maps/Rogue_map.json");
+
 
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
@@ -192,8 +193,53 @@ namespace Rogue
             game_screen = Raylib.LoadRenderTexture(game_width, game_height);
             Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
 
+
+
             Raylib.SetTargetFPS(30);
             //Console.Clear();
+        }
+
+        public void MainMenu()
+        {
+            // Tyhjennä ruutu ja aloita piirtäminen
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Raylib.BLACK);
+
+            // Laske ylimmän napin paikka ruudulla.
+            int button_width = 100;
+            int button_height = 20;
+            int button_x = Raylib.GetScreenWidth() / 2 - button_width / 2;
+            int button_y = Raylib.GetScreenHeight() / 2 - button_height / 2;
+
+            // Piirrä pelin nimi nappien yläpuolelle
+            RayGui.GuiLabel(new Rectangle(button_x, button_y - button_height * 2, button_width, button_height), "Rogue");
+
+            if (RayGui.GuiButton(new Rectangle(button_x, button_y, button_width, button_height), "Start Game") == 1)
+            {
+                // Start the game
+                Console.WriteLine("Fuck you");
+            }
+
+            // Piirrä seuraava nappula edellisen alapuolelle
+            button_y += button_height * 2;
+
+            if (RayGui.GuiButton(new Rectangle(button_x,
+        button_y,
+        button_width, button_height), "Options") == 1)
+            {
+                // Go to options somehow
+            }
+
+            button_y += button_height * 2;
+
+            if (RayGui.GuiButton(new Rectangle(button_x,
+                button_y,
+                button_width, button_height), "Quit") == 1)
+            {
+                // Quit the game
+            }
+            Raylib.EndDrawing();
+
         }
 
 
@@ -205,13 +251,18 @@ namespace Rogue
             Raylib.ClearBackground(Raylib.BLANK);
             level01.Draw();
             player.Draw();
-            
+
             Raylib.EndTextureMode();
 
             // Piirrä peli skaalattuna ruudulle
+            DrawGameToTexture();
+            MainMenu();
+        }
+        public void DrawGameToTexture() 
+        {
+            //DrawGame();
             DrawGameScaled();
         }
-
         private void DrawGameScaled()
         {
             // Piirrä peli skaalattuna ruudulle
@@ -232,7 +283,7 @@ namespace Rogue
 
             // Piirrä renderöintitextuuri skaalattuna ruudulle
             Raylib.DrawTexturePro(game_screen.texture, source, destination, Vector2.Zero, 0f, Raylib.WHITE);
-            Raylib.EndDrawing();
+           // Raylib.EndDrawing();
         }
         private void UpdateGame()
         {
