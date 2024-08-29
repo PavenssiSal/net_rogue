@@ -26,6 +26,13 @@ namespace Rogue
         int game_height;
         RenderTexture game_screen;
 
+        enum GameState
+        {
+            MainMenu,
+            GameLoop
+        }
+
+        GameState currentGameState;
 
         private string AskName()
         {
@@ -193,7 +200,7 @@ namespace Rogue
             game_screen = Raylib.LoadRenderTexture(game_width, game_height);
             Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
 
-
+            currentGameState = GameState.MainMenu;
 
             Raylib.SetTargetFPS(30);
             //Console.Clear();
@@ -206,8 +213,8 @@ namespace Rogue
             Raylib.ClearBackground(Raylib.BLACK);
 
             // Laske ylimmän napin paikka ruudulla.
-            int button_width = 100;
-            int button_height = 20;
+            int button_width = 200;
+            int button_height = 40;
             int button_x = Raylib.GetScreenWidth() / 2 - button_width / 2;
             int button_y = Raylib.GetScreenHeight() / 2 - button_height / 2;
 
@@ -218,23 +225,20 @@ namespace Rogue
             {
                 // Start the game
                 Console.WriteLine("Fuck you");
+                currentGameState = GameState.GameLoop;
             }
 
             // Piirrä seuraava nappula edellisen alapuolelle
             button_y += button_height * 2;
 
-            if (RayGui.GuiButton(new Rectangle(button_x,
-        button_y,
-        button_width, button_height), "Options") == 1)
+            if (RayGui.GuiButton(new Rectangle(button_x, button_y, button_width, button_height), "Options") == 1)
             {
                 // Go to options somehow
             }
 
             button_y += button_height * 2;
 
-            if (RayGui.GuiButton(new Rectangle(button_x,
-                button_y,
-                button_width, button_height), "Quit") == 1)
+            if (RayGui.GuiButton(new Rectangle(button_x, button_y, button_width, button_height), "Quit") == 1)
             {
                 // Quit the game
             }
@@ -373,8 +377,19 @@ namespace Rogue
         {
             while (Raylib.WindowShouldClose() == false)
             {
-                UpdateGame();
-                DrawGame();
+                switch (currentGameState)
+                {
+                    case GameState.MainMenu:
+                        // Tämä koodi on uutta
+                        MainMenu();
+                        break;
+
+                    case GameState.GameLoop:
+                        // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
+                        UpdateGame();
+                        DrawGameToTexture();
+                        break;
+                }
             } // while(true) ends
         } // GameLoop ends
     }
