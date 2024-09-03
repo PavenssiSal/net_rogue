@@ -200,8 +200,6 @@ namespace Rogue
             game_screen = Raylib.LoadRenderTexture(game_width, game_height);
             Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
 
-            currentGameState = GameState.MainMenu;
-
             Raylib.SetTargetFPS(30);
             //Console.Clear();
         }
@@ -226,6 +224,7 @@ namespace Rogue
                 // Start the game
                 Console.WriteLine("Fuck you");
                 currentGameState = GameState.GameLoop;
+
             }
 
             // Piirrä seuraava nappula edellisen alapuolelle
@@ -241,6 +240,7 @@ namespace Rogue
             if (RayGui.GuiButton(new Rectangle(button_x, button_y, button_width, button_height), "Quit") == 1)
             {
                 // Quit the game
+                Environment.Exit(0);
             }
             Raylib.EndDrawing();
 
@@ -314,8 +314,6 @@ namespace Rogue
                 {
                     moveX = 1;
                 }
-
-                //Check collisions with walls
                 //Check collisions with walls
                 int newX = (int)player.position.X + moveX;
                 int newY = (int)player.position.Y + moveY;
@@ -386,6 +384,7 @@ namespace Rogue
 
                     case GameState.GameLoop:
                         // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
+                        Console.WriteLine("Fuck me bruh");
                         UpdateGame();
                         DrawGameToTexture();
                         break;
