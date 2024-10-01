@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rogue", "Rogue\Rogue.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TurboMapReader", "..\..\TurboMapReader-main\TurboMapReader.csproj", "{508473C0-EBF6-47EF-9550-594BFB417EBB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayGuiCreator", "..\..\RayGuiCreator-main\RayGuiCreator\RayGuiCreator.csproj", "{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug.DLL|Any CPU = Debug.DLL|Any CPU
@@ -71,6 +73,30 @@ Global
 		{508473C0-EBF6-47EF-9550-594BFB417EBB}.Release|x64.Build.0 = Release|Any CPU
 		{508473C0-EBF6-47EF-9550-594BFB417EBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{508473C0-EBF6-47EF-9550-594BFB417EBB}.Release|x86.Build.0 = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug.DLL|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug.DLL|Any CPU.Build.0 = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug.DLL|x64.ActiveCfg = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug.DLL|x64.Build.0 = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug.DLL|x86.ActiveCfg = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug.DLL|x86.Build.0 = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug|x64.Build.0 = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Debug|x86.Build.0 = Debug|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release.DLL|Any CPU.ActiveCfg = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release.DLL|Any CPU.Build.0 = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release.DLL|x64.ActiveCfg = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release.DLL|x64.Build.0 = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release.DLL|x86.ActiveCfg = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release.DLL|x86.Build.0 = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release|x64.ActiveCfg = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release|x64.Build.0 = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release|x86.ActiveCfg = Release|Any CPU
+		{C9E2D2B2-F9CD-4FC6-8499-8F3EF62B8140}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

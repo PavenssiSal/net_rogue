@@ -6,8 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using ZeroElectric.Vinculum;
 
-
 using TurboMapReader;
+using RayGuiCreator;
+using System.Globalization;
 
 namespace Rogue
 {
@@ -26,47 +27,78 @@ namespace Rogue
         int game_height;
         RenderTexture game_screen;
 
+
+        
         enum GameState
         {
             MainMenu,
+            CharacterCreator,
             GameLoop
         }
 
         GameState currentGameState;
+        TextBoxEntry playerNameEntry;
 
-        private string AskName()
+
+        void DrawMainMenu()
         {
-            // Nimi valinta (ei hyväksy tyhjää eikä numeroita)
-            while (true)
+            int menuWidth = Raylib.GetScreenWidth() / 4;
+            int menuX = Raylib.GetScreenWidth() / 2 - menuWidth / 2;
+            int menuY = 10;
+            int rowHeight = Raylib.GetScreenHeight() / 10;
+            RayGuiCreator.MenuCreator creator = new RayGuiCreator.MenuCreator(menuX, menuY, rowHeight, menuWidth);
+
+            //Valikko alkaa tästä
+            creator.Label("Main menu");
+
+            if (creator.Button("Start Game"))
             {
-                Console.WriteLine("What is your name?");
-                string nimi = Console.ReadLine();
-                PlayerName = nimi;
+                currentGameState = GameState.CharacterCreator;
+            }
+        }
+        void DrawCharacterCreatorMenu()
+        {
+            int menuWidth = Raylib.GetScreenWidth() / 4;
+            int menuX = Raylib.GetScreenWidth() / 2 - menuWidth / 2;
+            int menuY = 10;
+            int rowHeight = Raylib.GetScreenHeight() / 10;
+            RayGuiCreator.MenuCreator creator = new RayGuiCreator.MenuCreator(menuX, menuY, rowHeight, menuWidth);
 
-                if (string.IsNullOrEmpty(nimi))
-                {
-                    Console.WriteLine("Name cannot be blank");
-                    continue;
-                }
-                bool nameOk = true;
-                for (int i = 0; i < nimi.Length; i++)
-                {
-                    char kirjain = nimi[i];
-                    if (char.IsLetter(kirjain) == false)
-                    {
-                        nameOk = false;
-                        Console.WriteLine("Name cannot have numbers");
-                        break;
-                    }
+            creator.Label("Character name");
+            creator.TextBox(playerNameEntry); //Modified player's name
 
-                }
-                if (nameOk == true)
+            if (creator.Button("Start Game"))
+            {
+                if (TestName( playerNameEntry.ToString() ))
                 {
+                    player.PlayerName = playerNameEntry.ToString();
+
+                    currentGameState = GameState.GameLoop;
+                }
+                 
+            }
+        }
+        public bool TestName(string nimi)
+        {
+            if (string.IsNullOrEmpty(nimi))
+            {
+                return false;
+            }
+            bool nameOk = true;
+            for (int i = 0; i < nimi.Length; i++)
+            {
+                char kirjain = nimi[i];
+                if (char.IsLetter(kirjain) == false)
+                {
+                    nameOk = false;
+                    Console.WriteLine("Name cannot have numbers");
                     break;
                 }
             }
-            return PlayerName;
+            return nameOk;
         }
+        
+        //private string AskName(){}
         // Rotu valinta
         private Race AskRace(Race rotu)
         {
@@ -153,7 +185,7 @@ namespace Rogue
         private PlayerCharacter CreateCharacter()
         {
             PlayerCharacter player = new PlayerCharacter();
-            player.PlayerName = AskName();
+            //player.PlayerName = AskName();
             player.rotu = AskRace(player.rotu);
             player.luokka = AskClass(player.luokka);
             return player;
@@ -164,12 +196,12 @@ namespace Rogue
             //Console.Clear();
             InIt();
             GameLoop();
-
-
         }
         private void InIt()
         {
+            currentGameState = GameState.MainMenu;
 
+            playerNameEntry = new TextBoxEntry(14);
 
             player = CreateCharacter();
             MapLoader loader = new MapLoader();
@@ -223,8 +255,8 @@ namespace Rogue
             {
                 // Start the game
                 Console.WriteLine("Fuck you");
-                currentGameState = GameState.GameLoop;
-
+                
+                currentGameState = GameState.CharacterCreator;
             }
 
             // Piirrä seuraava nappula edellisen alapuolelle
@@ -243,13 +275,10 @@ namespace Rogue
                 Environment.Exit(0);
             }
             Raylib.EndDrawing();
-
         }
-
 
         private void DrawGame()
         {
-
             // Piirrä peli renderöintitextuuriin
             Raylib.BeginTextureMode(game_screen);
             Raylib.ClearBackground(Raylib.BLANK);
@@ -258,9 +287,11 @@ namespace Rogue
 
             Raylib.EndTextureMode();
 
+            Raylib.BeginDrawing();
             // Piirrä peli skaalattuna ruudulle
             DrawGameToTexture();
-            MainMenu();
+            //DrawMainMenu();
+            Raylib.EndDrawing();
         }
         public void DrawGameToTexture() 
         {
@@ -270,7 +301,6 @@ namespace Rogue
         private void DrawGameScaled()
         {
             // Piirrä peli skaalattuna ruudulle
-            Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.BLANK);
 
             // Lasketaan skaala
@@ -378,12 +408,23 @@ namespace Rogue
                 switch (currentGameState)
                 {
                     case GameState.MainMenu:
+                        Raylib.BeginDrawing();
+                        Raylib.ClearBackground(Raylib.BLACK);
                         // Tämä koodi on uutta
-                        MainMenu();
+                        DrawMainMenu();
+                        //MainMenu();
+                        Raylib.EndDrawing();
                         break;
 
+                    case GameState.CharacterCreator:
+                        Raylib.BeginDrawing();
+                        Raylib.ClearBackground(Raylib.DARKGRAY);
+                        DrawCharacterCreatorMenu();
+                        Raylib.EndDrawing();
+                        break;
                     case GameState.GameLoop:
                         // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
+                        
                         Console.WriteLine("Fuck me bruh");
                         UpdateGame();
                         DrawGameToTexture();
