@@ -9,6 +9,7 @@ using ZeroElectric.Vinculum;
 using TurboMapReader;
 using RayGuiCreator;
 using System.Globalization;
+using System.Security.Claims;
 
 namespace Rogue
 {
@@ -38,6 +39,8 @@ namespace Rogue
 
         GameState currentGameState;
         TextBoxEntry playerNameEntry;
+        public MultipleChoiceEntry classChoices = new MultipleChoiceEntry(new string[] { Role.Wizard.ToString(), Role.Swordfighter.ToString(), Role.Archer.ToString(), Role.Homeless.ToString(), Role.ManWithBigWoodenStick.ToString() });
+        public MultipleChoiceEntry raceChoices = new MultipleChoiceEntry(new string[] { Race.Human.ToString(), Race.Elf.ToString(), Race.Rat.ToString(), Race.Jesus.ToString() });
 
 
         void DrawMainMenu()
@@ -61,12 +64,18 @@ namespace Rogue
             int menuWidth = Raylib.GetScreenWidth() / 4;
             int menuX = Raylib.GetScreenWidth() / 2 - menuWidth / 2;
             int menuY = 10;
-            int rowHeight = Raylib.GetScreenHeight() / 10;
+            int rowHeight = Raylib.GetScreenHeight() / 25;
             RayGuiCreator.MenuCreator creator = new RayGuiCreator.MenuCreator(menuX, menuY, rowHeight, menuWidth);
 
             creator.Label("Character name");
             creator.TextBox(playerNameEntry); //Modified player's name
-
+            creator.Label("");
+            creator.Label("Character Race:");
+            creator.ToggleGroup(raceChoices);
+            creator.Label("");
+            creator.Label("Character Class");
+            creator.ToggleGroup(classChoices);
+            creator.Label("");
             if (creator.Button("Start Game"))
             {
                 if (TestName( playerNameEntry.ToString() ))
@@ -74,6 +83,41 @@ namespace Rogue
                     player.PlayerName = playerNameEntry.ToString();
 
                     currentGameState = GameState.GameLoop;
+                    switch (raceChoices.GetSelected())
+                    {
+                        case "Human":
+                            player.rotu = Race.Human;
+                            break;
+                        case "Elf":
+                            player.rotu = Race.Elf;
+                            break;
+                        case "Rat":
+                            player.rotu = Race.Rat;
+                            break;
+                        case "Jesus":
+                            player.rotu = Race.Jesus;
+                            break;
+
+                    }
+                    switch (classChoices.GetSelected())
+                    {
+                        case "Wizard":
+                            player.luokka = Role.Wizard;
+                            break;
+                        case "Warrior":
+                            player.luokka = Role.Swordfighter;
+                            break;
+                        case "Archer":
+                            player.luokka = Role.Archer;
+                            break;
+                        case "Homeless":
+                            player.luokka = Role.Homeless;
+                            break;
+                        case "ManWithBigWoodenStick":
+                            player.luokka = Role.ManWithBigWoodenStick;
+                            break;
+
+                    }
                 }
                  
             }
@@ -397,7 +441,6 @@ namespace Rogue
                 {
                     player.position.Y = Console.WindowHeight - 1;
                 }
-
                 DrawGame();
             }
         }
@@ -415,7 +458,6 @@ namespace Rogue
                         //MainMenu();
                         Raylib.EndDrawing();
                         break;
-
                     case GameState.CharacterCreator:
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Raylib.DARKGRAY);
@@ -424,7 +466,6 @@ namespace Rogue
                         break;
                     case GameState.GameLoop:
                         // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
-                        
                         Console.WriteLine("Fuck me bruh");
                         UpdateGame();
                         DrawGameToTexture();
