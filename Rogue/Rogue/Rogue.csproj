@@ -48,6 +48,9 @@
     <None Update="Maps\Rogue_Map.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Maps\Rogue_map_simple.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Maps\tiledmap.tmj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

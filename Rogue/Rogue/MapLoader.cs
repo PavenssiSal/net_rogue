@@ -11,59 +11,37 @@ namespace Rogue
     public class MapLoader
     {
 
-        //public Map LoadTestMap()
-        //{
-
-        //    Map test = new Map();
-        //    test.mapWidth = 8;
-        //    test.mapTiles = new int[] {
-        //        2, 2, 2, 2, 2, 2, 2, 2,
-        //        2, 1, 1, 2, 1, 1, 1, 2,
-        //        2, 1, 1, 2, 1, 1, 1, 2,
-        //        2, 1, 1, 1, 1, 1, 2, 2,
-        //        2, 2, 2, 2, 1, 1, 1, 2,
-        //        2, 1, 1, 1, 1, 1, 1, 2,
-        //        2, 2, 2, 2, 2, 2, 2, 2 };
-
-        //    return test;
-        //}
-        public Map? ReadMapFromFile()
+        public Map LoadTestMap()
         {
-            // Lataa tiedosto käyttäen TurboMapReaderia   
-            TurboMapReader.TiledMap turboMap = MapReader.LoadMapFromFile("Maps/Rogue_map.json");
+            Map test = new Map();
+            test.mapWidth = 8;
+            test.layers[0].mapTiles = new int[] {
+            2, 2, 2, 2, 2, 2, 2, 2,
+            2, 1, 1, 2, 1, 1, 1, 2,
+            2, 1, 1, 2, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 2, 2,
+            2, 2, 2, 2, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 2,
+            2, 2, 2, 2, 2, 2, 2, 2 };
+            return test;
 
-            // Tarkista onnistuiko lataaminen
-            if (turboMap != null)
-            {
-                // Muuta Map olioksi ja palauta
-                Console.WriteLine("Succesess");
-                return ConvertTiledMapToMap(turboMap);
-                
-            }
-            else
-            {
-                // OH NO!
-                Console.WriteLine("Úff");
-                return null;
-            }
         }
-
         public Map LoadMapFromFile()
         {
-            
+
 
             string mapfile = "Maps/mapfile_layers.json";
             if (File.Exists(mapfile) == false)
             {
                 Console.WriteLine($"File {mapfile} not found");
-                 // Return the test map as fallback
+                // Return the test map as fallback
             }
             if (File.Exists(mapfile) == true)
             {
                 Console.WriteLine("");
             }
 
-                string fileContents;
+            string fileContents;
             using (StreamReader reader = File.OpenText(mapfile))
             {
                 fileContents = reader.ReadToEnd(); // Read all lines into fileContents
@@ -73,42 +51,57 @@ namespace Rogue
 
             return loadedMap;
         }
-
-        public Map ConvertTiledMapToMap(TiledMap turbomap)
+        public void TestFileReading(string filename)
         {
-            // Luo tyhjä kenttä
-            Map roguemap = new Map();
-            // Varaa tilaa kolmelle tasolle
-            roguemap.layers = new MapLayer[3];
+            using (StreamReader reader = File.OpenText(filename))
+            {
+                Console.WriteLine("File contents:");
+                Console.WriteLine();
 
-            // Muunna tason "ground" tiedot
-            TurboMapReader.MapLayer groundLayer = turbomap.GetLayerByName("ground");
+                string line;
+                while (true)
+                {
+                    line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break; // End of file
+                    }
+                    Console.WriteLine(line);
+                }
+            }
+        }
 
-            // TODO: Lue kentän leveys. Kaikilla TurboMapReader.MapLayer olioilla on sama leveys
+        public Map LoadLayeredMap(string filename)
+        {
+            Map map = new Map();
+            bool fileFound = File.Exists(filename);
+            if (fileFound == false)
+            {
+                Console.WriteLine($"File {filename} not found");
+                return LoadTestMap(); // Return the test map as fallback
+            }
+            using (StreamReader reader = File.OpenText(filename))
+            {
+                var fileContents = reader.ReadToEnd();
+                return JsonConvert.DeserializeObject<Map>(fileContents);
+            }
+        }
 
-            // Kuinka monta kenttäpalaa tässä tasossa on?
-            int howManyTiles = groundLayer.data.Length;
-            // Taulukko jossa palat ovat
-            int[] groundTiles = groundLayer.data;
+        public Map ToMap(Map map, TiledMap Tmap)
+        {
+            map.layers[0].name = Tmap.GetLayerByName("Ground").name;
+            map.layers[0].mapTiles = Tmap.GetLayerByName("Ground").data;
 
-            // Luo uusi taso tietojen perusteella
-            MapLayer myGroundLayer = new MapLayer();
-            myGroundLayer.name = "ground";
-            myGroundLayer.mapTiles = new int[howManyTiles];
+            map.layers[1].name = Tmap.GetLayerByName("Items").name;
+            map.layers[1].mapTiles = Tmap.GetLayerByName("Items").data;
 
+            map.layers[2].name = Tmap.GetLayerByName("Enemies").name;
+            map.layers[2].mapTiles = Tmap.GetLayerByName("Enemies").data;
 
-            // TODO: lue tason palat
+            map.mapWidth = Tmap.width;
 
+            return map;
 
-
-            // Tallenna taso kenttään
-            roguemap.layers[0] = myGroundLayer;
-
-            // TODO: Muunna tason "enemies" tiedot...
-            // TODO: Muunna tason "items" tiedot...
-
-            // Lopulta palauta kenttä
-            return roguemap;
         }
 
     }

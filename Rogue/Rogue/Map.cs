@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZeroElectric.Vinculum;
 using TurboMapReader;
+using System.Data;
 
 namespace Rogue
 {
@@ -19,16 +20,16 @@ namespace Rogue
 
     public class Map
     {
-            // Uusi muuttuja, joka viittaa TiledMap olioon
-            TurboMapReader.TiledMap tiledMap;
+        // Uusi muuttuja, joka viittaa TiledMap olioon
+        TurboMapReader.TiledMap tiledMap;
 
 
-            public int GetTileAt(int x, int y)
-            {
-                TurboMapReader.MapLayer ground = tiledMap.GetLayerByName("ground");
-                return ground.data[y * ground.width + x];
-            }
-        
+        public int GetTileAt(int x, int y)
+        {
+            TurboMapReader.MapLayer ground = tiledMap.GetLayerByName("ground");
+            return ground.data[y * ground.width + x];
+        }
+
 
         public int mapWidth;
         public int mapHeight;
@@ -47,7 +48,7 @@ namespace Rogue
                 }
             }
             Console.WriteLine($"Error: No layer with name: {layerName}");
-           return null; // Wanted layer was not found!
+            return null; // Wanted layer was not found!
         }
 
         public Vector2 position;
@@ -65,7 +66,7 @@ namespace Rogue
         // 2, 3
         int atlasIndex;
         int atlasIndex2;
-        
+
 
         public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
         {
@@ -79,8 +80,8 @@ namespace Rogue
             enemies = new List<Enemy>();
             items = new List<Items>();
 
-            MapLayer enemyLayer = GetLayer("enemies");
-            MapLayer itemLayer = GetLayer("items");
+            MapLayer enemyLayer = GetLayer("Enemies");
+            MapLayer itemLayer = GetLayer("Items");
 
             int[] enemyTiles = enemyLayer.mapTiles;
             int[] itemTiles = itemLayer.mapTiles;
@@ -143,19 +144,12 @@ namespace Rogue
 
         public void Draw()
         {
-            MapLayer groundLayer = GetLayer("ground");
+            MapLayer groundLayer = GetLayer("Ground");
             int[] mapTiles = groundLayer.mapTiles;
-
-
-            
-
             int mapHeight = mapTiles.Length / mapWidth; // Calculate the height: the amount of rows
 
             atlasIndex = 4 + 3 * imagesPerRow;
             atlasIndex2 = 1 + 4 * imagesPerRow;
-            
-
-
             // Laske kuvan kohta
 
             //Seinän
@@ -163,22 +157,21 @@ namespace Rogue
             int WallY = (int)(atlasIndex / imagesPerRow);
             int imagePixelX = WallX * tileSize;
             int imagePixelY = WallY * tileSize;
-            
+
             //Lattian
             int FloorX = atlasIndex2 % imagesPerRow;
             int FloorY = (int)(atlasIndex2 / imagesPerRow);
             int imagePixelXB = FloorX * tileSize;
             int imagePixelYB = FloorY * tileSize;
-
-        
-
+            /*Dictionary<int, Rectangle> kuvaMappi = new Dictionary<int, Rectangle>();
+            kuvaMappi.Add(2, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
+            kuvaMappi.Add(1, new Rectangle(imagePixelXB, imagePixelYB, Game.tileSize, Game.tileSize));
+            kuvaMappi.Add(14, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
+            kuvaMappi.Add(15, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
+            kuvaMappi.Add(29, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
+            */
             Rectangle WallTexture = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
-
             Rectangle FloorTexture = new Rectangle(imagePixelXB, imagePixelYB, Game.tileSize, Game.tileSize);
-
-         
-
-
 
             for (int y = 0; y < mapHeight; y++) // for each row
             {
@@ -196,7 +189,7 @@ namespace Rogue
                     // Laske palan pikselikordinaatit kuvassa tileIndex;in avulla
 
                     int pixelX = (int)(x * tileSize);
-                            int pixelY = (int)(y * tileSize);
+                    int pixelY = (int)(y * tileSize);
                     void Move(int moveX, int moveY)
                     {
                         // Move the player
@@ -204,18 +197,22 @@ namespace Rogue
                         position.Y += moveY;
                     }
 
-                    Vector2 pixelPosition = new Vector2(pixelX, pixelY);
+                     Vector2 pixelPosition = new Vector2(pixelX, pixelY);
+                    /*if (kuvaMappi.ContainsKey(tileId))
+                    {
+                        Raylib.DrawTextureRec(image, kuvaMappi[tileId], pixelPosition, Raylib.WHITE);
+                    }*/
 
                     switch (tileId)
                     {
-                        case 5:
+                        case 50:
 
                             // Floor
                             //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.BLANK);
                             //Raylib.DrawText(".", pixelX + 5, pixelY, tileSize, Raylib.WHITE);
                             Raylib.DrawTextureRec(image, FloorTexture, pixelPosition, Raylib.WHITE);
                             break;
-                        case 8:
+                        case 41:
                             //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.DARKGRAY); // Wall
                             //Raylib.DrawText("#", pixelX, pixelY, tileSize, Raylib.WHITE);
                             Raylib.DrawTextureRec(image, WallTexture, pixelPosition, Raylib.WHITE);
@@ -224,19 +221,18 @@ namespace Rogue
                             break;
                     }
                 }
-            }
 
-            // Piirretään sitten esineet
-            foreach (Items item in items)
-            {
-                item.Draw();
-            }
+                // Piirretään sitten esineet
+                foreach (Items item in items)
+                {
+                    item.Draw();
+                }
 
-            // Lopuksi piirretään viholliset
-            foreach (Enemy enemy in enemies)
-            {
-                enemy.Draw();
+                // Lopuksi piirretään viholliset
+                foreach (Enemy enemy in enemies)
+                {
+                    enemy.Draw();
+                }
             }
         }
-    }
-}
+    } }

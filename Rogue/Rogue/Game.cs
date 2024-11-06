@@ -10,6 +10,7 @@ using TurboMapReader;
 using RayGuiCreator;
 using System.Globalization;
 using System.Security.Claims;
+using System.Reflection.PortableExecutable;
 
 namespace Rogue
 {
@@ -20,6 +21,7 @@ namespace Rogue
         string PlayerName;
         public PlayerCharacter player = new PlayerCharacter();
         Map level01;
+        TiledMap level;
 
         public static readonly int tileSize = 16;
 
@@ -28,12 +30,15 @@ namespace Rogue
         int game_height;
         RenderTexture game_screen;
 
-
+        SettingsMenu settingsMenu;
+        PauseMenu pauseMenu;
         
         enum GameState
         {
             MainMenu,
             CharacterCreator,
+            Settings,
+            PauseMenu,
             GameLoop
         }
 
@@ -57,6 +62,11 @@ namespace Rogue
             if (creator.Button("Start Game"))
             {
                 currentGameState = GameState.CharacterCreator;
+            }
+            creator.Label("");
+            if (creator.Button("Settings"))
+            {
+                currentGameState = GameState.Settings;
             }
         }
         void DrawCharacterCreatorMenu()
@@ -82,7 +92,6 @@ namespace Rogue
                 {
                     player.PlayerName = playerNameEntry.ToString();
 
-                    currentGameState = GameState.GameLoop;
                     switch (raceChoices.GetSelected())
                     {
                         case "Human":
@@ -118,9 +127,10 @@ namespace Rogue
                             break;
 
                     }
+                    currentGameState = GameState.GameLoop;
                 }
-                 
             }
+            creator.EndMenu();
         }
         public bool TestName(string nimi)
         {
@@ -142,118 +152,47 @@ namespace Rogue
             return nameOk;
         }
         
-        //private string AskName(){}
-        // Rotu valinta
-        private Race AskRace(Race rotu)
-        {
-            while (true)
-            {
-                Console.WriteLine("Valitse rotu");
-                Console.WriteLine("1: Human");
-                Console.WriteLine("2: Elf");
-                Console.WriteLine("3: Rat");
-                Console.WriteLine("4: Jesus");
-                string raceAnswer = Console.ReadLine();
-                if (raceAnswer == "1" || raceAnswer == "Human")
-                {
-                    Rotu = Race.Human.ToString();
-                    break;
-                }
-                if (raceAnswer == "2" || raceAnswer == "Elf")
-                {
-                    Rotu = Race.Elf.ToString();
-                    break;
-                }
-                if (raceAnswer == "3" || raceAnswer == "Rat")
-                {
-                    Rotu = Race.Rat.ToString();
-                    break;
-                }
-                if (raceAnswer == "4" || raceAnswer == "Jesus")
-                {
-                    Rotu = Race.Jesus.ToString();
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Ei ole olemassa, valitse uudestaan");
-                }
-            }
-            return rotu;
-        }
-        // Luokka valinta
-        private Role AskClass(Role luokka)
-        {
-            while (true)
-            {
-                Console.WriteLine("Valitse luokka");
-                Console.WriteLine("1: Wizard");
-                Console.WriteLine("2: Fighter");
-                Console.WriteLine("3: Swordfighter");
-                Console.WriteLine("4: Archer");
-                Console.WriteLine("5: ManWithBigWoodenStick");
-                string classAnswer = Console.ReadLine();
-
-                if (classAnswer == "1" || classAnswer == "Wizard")
-                {
-                    Luokka = Role.Wizard.ToString();
-                    break;
-                }
-                if (classAnswer == "2" || classAnswer == "Fighter")
-                {
-                    Luokka = Role.Fighter.ToString();
-                    break;
-                }
-                if (classAnswer == "3" || classAnswer == "Swordfighter")
-                {
-                    Luokka = Role.Swordfighter.ToString();
-                    break;
-                }
-                if (classAnswer == "4" || classAnswer == "Archer")
-                {
-                    Luokka = Role.Archer.ToString();
-                    break;
-                }
-                if (classAnswer == "5" || classAnswer == "ManWithBigWoodenStick")
-                {
-                    Luokka = Role.ManWithBigWoodenStick.ToString();
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Ei ole olemassa, valitse uudestaan");
-                }
-            }
-            return luokka;
-        }
         private PlayerCharacter CreateCharacter()
         {
             PlayerCharacter player = new PlayerCharacter();
-            //player.PlayerName = AskName();
-            player.rotu = AskRace(player.rotu);
-            player.luokka = AskClass(player.luokka);
             return player;
         }
 
         public void Run()
         {
-            //Console.Clear();
             InIt();
             GameLoop();
+        }
+        void OnSettingsBackButtonPressed(object sender, EventArgs args)
+        {
+            currentGameState = GameState.MainMenu;
         }
         private void InIt()
         {
             currentGameState = GameState.MainMenu;
 
-            playerNameEntry = new TextBoxEntry(14);
+            settingsMenu = new SettingsMenu();
+            // Kytke asetusvalikon tapahtumaan funktio
+            settingsMenu.BackButtonPressedEvent += this.OnSettingsBackButtonPressed;
+            pauseMenu = new PauseMenu();
+            // Kytke asetusvalikon tapahtumaan funktio
+            pauseMenu.BackButtonPressedEvent += this.OnSettingsBackButtonPressed;
+            // Tätä funktiota kutsutaan kun asetusvalikon Back nappia on painettu
 
+            TurboMapReader.TiledMap tileMap = TurboMapReader.MapReader.LoadMapFromFile("Maps/Rogue_map_simple.json");
+            playerNameEntry = new TextBoxEntry(14);
             player = CreateCharacter();
-            MapLoader loader = new MapLoader();
-            level01 = loader.LoadMapFromFile();
+            //MapLoader loader = new MapLoader();
+            //level01 = loader.LoadMapFromFile();
+            MapLoader Reader = new MapLoader();
+            level01 = Reader.LoadLayeredMap("Maps/Rogue_map_simple.json");
+            level = MapReader.LoadMapFromFile("Maps/Rogue_map_simple.json");
+            Console.WriteLine(level);
+            Reader.ToMap(level01, level);
 
             // Set the window size
             game_width = 480;
-            game_height = 270;
+            game_height = 360;
             Raylib.InitWindow(game_width * 2, game_height * 2, "Rogue Game");
 
             // Load the sprite atlas image
@@ -366,7 +305,7 @@ namespace Rogue
         private void UpdateGame()
         {
             // Set player starting position
-            player.position = new Vector2(1, 1);
+            player.position = new Vector2(5, 5);
             while (true)
             {
                 int moveX = 0;
@@ -394,10 +333,10 @@ namespace Rogue
                 int index = newX + newY * level01.mapWidth;
 
                 //Most definitely not the intended way, but it works
-                MapLayer layer = level01.GetLayer("ground");
-                MapLayer Itemlayer = level01.GetLayer("items");
+                MapLayer layer = level01.GetLayer("Ground");
+                MapLayer Itemlayer = level01.GetLayer("Items");
 
-                if (layer.mapTiles[index] != 5)
+                if (layer.mapTiles[index] != 50)
                 {
                     // The new position is not a floor tile (not walkable), so do not move the player
                     moveX = 0; moveY = 0;
@@ -465,10 +404,15 @@ namespace Rogue
                         Raylib.EndDrawing();
                         break;
                     case GameState.GameLoop:
-                        // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
+                        //Testing stuff to see if loads and player info work properly
                         Console.WriteLine("Fuck me bruh");
+                        Console.WriteLine($"Player info: Name: {player.PlayerName}, Class: {player.luokka}, Race: {player.rotu}");
+                        // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
                         UpdateGame();
                         DrawGameToTexture();
+                        break;
+                    case GameState.Settings:
+                        settingsMenu.DrawMenu();
                         break;
                 }
             } // while(true) ends
