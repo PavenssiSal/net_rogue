@@ -1,36 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 using ZeroElectric.Vinculum;
 
 namespace Rogue.Images
 {
-
     internal class Enemy
     {
-        public string name;       // Vihollisen nimi
-        public Vector2 position;  // Missä vihollinen on kentässä
-        private Texture graphics; // Viittaus kuvaan jossa vihollisen kuva on
-        private int DrawIndex;    // Missä kohdassa kuvaa vihollinen on
+        public string name { get; set; }      // Vihollisen nimi
+        public Vector2 position { get; set; } // Missä vihollinen on kentässä
+        public int spriteId { get; set; }     // Tunniste viholliselle (mätsää karttaan)
 
-        int imagesPerRow = 12;
-        int tileSize = 16;
+        [JsonIgnore]
+        private Texture graphics; // Viittaus kuvaan, ei tallenneta JSON:iin
 
-        int atlasIndex;
-        public Enemy(string name, Vector2 position, Texture graphics, int drawIndex)
+        private int DrawIndex;
+        private int imagesPerRow = 12;
+        private int tileSize = 16;
+        private int atlasIndex;
+
+        // Oletuskonstruktori (tarvitaan JSON-deserialisointiin)
+        public Enemy() { }
+
+        // Pääasiallinen konstruktori
+        public Enemy(string name, Vector2 position, int spriteId, Texture spriteAtlas)
         {
             this.name = name;
             this.position = position;
-            this.graphics = graphics;
-            this.DrawIndex = drawIndex;
+            this.spriteId = spriteId;
+            this.graphics = spriteAtlas; // Asetetaan tekstuuri
+        }
+
+        // Kopiokonstruktori
+        public Enemy(Enemy copyFrom)
+        {
+            this.name = copyFrom.name;
+            this.position = copyFrom.position;
+            this.spriteId = copyFrom.spriteId;
+ 
         }
 
         public void Draw()
         {
-
             atlasIndex = 0 + 7 * imagesPerRow;
 
             // Laske kuvan kohta
@@ -49,6 +60,5 @@ namespace Rogue.Images
 
             Raylib.DrawTextureRec(graphics, imageRect, pixelPosition, Raylib.WHITE);
         }
-
     }
 }

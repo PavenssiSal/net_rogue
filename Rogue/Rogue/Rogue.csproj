@@ -36,7 +36,7 @@
     <None Update="Maps\mapfile.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Maps\mapfile_layers.json">
+    <None Update="Maps\enemies.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Maps\Rogue_map.json">

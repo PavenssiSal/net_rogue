@@ -103,7 +103,7 @@ namespace Rogue
                     {
                         // Tässä kohdassa kenttää on vihollinen
                         // enemyTileId voi olla sama kuin drawIndex
-                        enemies.Add(new Enemy("Enemy", position, spriteAtlas, enemyTileId));
+                        enemies.Add(new Enemy("Enemy", position, enemyTileId, spriteAtlas));
                     }
 
                     if (itemTileId != 0)
