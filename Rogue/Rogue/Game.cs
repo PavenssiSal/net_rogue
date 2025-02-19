@@ -32,7 +32,8 @@ namespace Rogue
 
         SettingsMenu settingsMenu;
         PauseMenu pauseMenu;
-        
+
+        Stack<GameState> GameStateStack = new Stack<GameState>();
         enum GameState
         {
             MainMenu,
@@ -41,8 +42,17 @@ namespace Rogue
             PauseMenu,
             GameLoop
         }
+        private void ChangeGameState(GameState newState)
+        {
+            if (GameStateStack.Count > 0 && GameStateStack.Peek() == newState)
+            {
+                return;  // Prevent duplicate states from stacking
+            }
+            GameStateStack.Push(newState);
+        }
 
-        GameState currentGameState;
+
+        //GameState currentGameState;
         TextBoxEntry playerNameEntry;
         public MultipleChoiceEntry classChoices = new MultipleChoiceEntry(new string[] { Role.Wizard.ToString(), Role.Swordfighter.ToString(), Role.Archer.ToString(), Role.Homeless.ToString(), Role.ManWithBigWoodenStick.ToString() });
         public MultipleChoiceEntry raceChoices = new MultipleChoiceEntry(new string[] { Race.Human.ToString(), Race.Elf.ToString(), Race.Rat.ToString(), Race.Jesus.ToString() });
@@ -61,12 +71,15 @@ namespace Rogue
 
             if (creator.Button("Start Game"))
             {
-                currentGameState = GameState.CharacterCreator;
+                Console.WriteLine(GameStateStack.Peek());
+                Console.WriteLine("Game Started");
+                ChangeGameState(GameState.CharacterCreator);
+                Console.WriteLine(GameStateStack.Peek());
             }
             creator.Label("");
             if (creator.Button("Settings"))
             {
-                currentGameState = GameState.Settings;
+                ChangeGameState(GameState.Settings);
             }
         }
         void DrawCharacterCreatorMenu()
@@ -127,7 +140,7 @@ namespace Rogue
                             break;
 
                     }
-                    currentGameState = GameState.GameLoop;
+                    ChangeGameState(GameState.GameLoop);
                 }
             }
             creator.EndMenu();
@@ -163,20 +176,19 @@ namespace Rogue
             InIt();
             GameLoop();
         }
-        void OnSettingsBackButtonPressed(object sender, EventArgs args)
-        {
-            currentGameState = GameState.MainMenu;
-        }
         private void InIt()
         {
-            currentGameState = GameState.MainMenu;
+            ChangeGameState(GameState.MainMenu);
 
             settingsMenu = new SettingsMenu();
             // Kytke asetusvalikon tapahtumaan funktio
             settingsMenu.BackButtonPressedEvent += this.OnSettingsBackButtonPressed;
             pauseMenu = new PauseMenu();
-            // Kytke asetusvalikon tapahtumaan funktio
-            pauseMenu.BackButtonPressedEvent += this.OnSettingsBackButtonPressed;
+            // Kytke Pausevalikon tapahtumaan funktio
+            pauseMenu.BackButtonPressedEvent += this.OnPauseBackButtonPressed;
+            pauseMenu.OptionsButtonPressedEvent += this.OnPauseOptionsButtonPressed;
+            pauseMenu.MainMenuButtonPressedEvent += this.OnPauseMainMenuPressed;
+
             // Tätä funktiota kutsutaan kun asetusvalikon Back nappia on painettu
 
             TurboMapReader.TiledMap tileMap = TurboMapReader.MapReader.LoadMapFromFile("Maps/Rogue_map_simple.json");
@@ -238,8 +250,8 @@ namespace Rogue
             {
                 // Start the game
                 Console.WriteLine("Fuck you");
-                
-                currentGameState = GameState.CharacterCreator;
+
+                ChangeGameState(GameState.CharacterCreator);
             }
 
             // Piirrä seuraava nappula edellisen alapuolelle
@@ -248,6 +260,7 @@ namespace Rogue
             if (RayGui.GuiButton(new Rectangle(button_x, button_y, button_width, button_height), "Options") == 1)
             {
                 // Go to options somehow
+                ChangeGameState(GameState.Settings);
             }
 
             button_y += button_height * 2;
@@ -305,8 +318,8 @@ namespace Rogue
         private void UpdateGame()
         {
             // Set player starting position
-            player.position = new Vector2(5, 5);
-            while (true)
+            player.position = new Vector2(1, 1);
+            while (GameStateStack.Peek() == GameState.GameLoop)
             {
                 int moveX = 0;
                 int moveY = 0;
@@ -327,12 +340,17 @@ namespace Rogue
                 {
                     moveX = 1;
                 }
+                else if (Raylib.IsKeyPressed(KeyboardKey.KEY_P))
+                {
+                    Console.WriteLine("Pausing Game");
+                    ChangeGameState(GameState.PauseMenu);
+                }
                 //Check collisions with walls
                 int newX = (int)player.position.X + moveX;
                 int newY = (int)player.position.Y + moveY;
                 int index = newX + newY * level01.mapWidth;
 
-                //Most definitely not the intended way, but it works
+                //Most definitely not the intended way, but it works and I'm so tired of trying to do this
                 MapLayer layer = level01.GetLayer("Ground");
                 MapLayer Itemlayer = level01.GetLayer("Items");
 
@@ -353,7 +371,7 @@ namespace Rogue
                 Items item = level01.GetItemAt(newX, newY);
                 if (item != null)
                 {
-                    while (lukko = true)
+                    while (lukko)
                     {
                         Console.WriteLine($"You find an item: {item.name}");
                         break;
@@ -387,35 +405,75 @@ namespace Rogue
         {
             while (Raylib.WindowShouldClose() == false)
             {
-                switch (currentGameState)
+                if (GameStateStack.Count == 0)
                 {
-                    case GameState.MainMenu:
-                        Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Raylib.BLACK);
-                        // Tämä koodi on uutta
-                        DrawMainMenu();
-                        //MainMenu();
-                        Raylib.EndDrawing();
-                        break;
-                    case GameState.CharacterCreator:
-                        Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Raylib.DARKGRAY);
-                        DrawCharacterCreatorMenu();
-                        Raylib.EndDrawing();
-                        break;
-                    case GameState.GameLoop:
-                        //Testing stuff to see if loads and player info work properly
-                        Console.WriteLine("Fuck me bruh");
-                        Console.WriteLine($"Player info: Name: {player.PlayerName}, Class: {player.luokka}, Race: {player.rotu}");
-                        // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
-                        UpdateGame();
-                        DrawGameToTexture();
-                        break;
-                    case GameState.Settings:
-                        settingsMenu.DrawMenu();
-                        break;
+                    ChangeGameState(GameState.MainMenu);
                 }
-            } // while(true) ends
+                GameState currentState = GameStateStack.Peek();
+                Console.WriteLine(currentState);
+                switch (currentState)
+                    {
+                        case GameState.MainMenu:
+                            Raylib.BeginDrawing();
+                            Raylib.ClearBackground(Raylib.BLACK);
+                            // Tämä koodi on uutta
+                            DrawMainMenu();
+                            //MainMenu();
+                            Raylib.EndDrawing();
+                            break;
+                        case GameState.CharacterCreator:
+                            Raylib.BeginDrawing();
+                            Raylib.ClearBackground(Raylib.DARKGRAY);
+                            DrawCharacterCreatorMenu();
+                            Raylib.EndDrawing();
+                            break;
+                        case GameState.GameLoop:
+                            //Testing stuff to see if loads and player info work properly
+                            Console.WriteLine("Fuck me bruh");
+                            Console.WriteLine($"Player info: Name: {player.PlayerName}, Class: {player.luokka}, Race: {player.rotu}");
+                            // Tämä koodi on se mitä GameLoop() funktiossa oli ennen muutoksia
+                            UpdateGame();
+                            DrawGameToTexture();
+                            break;
+                        case GameState.Settings:
+                            settingsMenu.DrawMenu();
+                            break;
+                        case GameState.PauseMenu:
+                            Console.WriteLine("Game Paused");
+                            pauseMenu.DrawMenu();
+                            break;
+                    
+                } // while(true) ends
+            }
         } // GameLoop ends
+        void OnSettingsBackButtonPressed(object sender, EventArgs args)
+        {
+            GameStateStack.Pop();
+        }
+        void OnPauseMainMenuPressed(object sender, EventArgs args)
+        {
+            ChangeGameState(GameState.MainMenu);
+        }
+        void OnPauseBackButtonPressed(object sender, EventArgs args)
+        {
+            GameStateStack.Pop();
+        }
+        void OnPauseOptionsButtonPressed(object sender, EventArgs args)
+        {
+            ChangeGameState(GameState.Settings);
+        }
+
+        /*void ChangeGameState(GameState gameState)
+        {
+            currentGameState = gameState;
+            if (gameState == GameState.MainMenu)
+            {
+                Console.WriteLine("GameStateStack cleared");
+                GameStateStack.Clear();
+            }
+            Console.WriteLine(gameState + "pushed");
+            GameStateStack.Push(gameState);
+        }*/
+        
     }
 }

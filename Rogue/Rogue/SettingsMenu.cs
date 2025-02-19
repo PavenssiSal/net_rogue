@@ -7,7 +7,7 @@ using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
-    internal class SettingsMenu
+    class SettingsMenu
     {
         public event EventHandler BackButtonPressedEvent;
         public void DrawMenu()
