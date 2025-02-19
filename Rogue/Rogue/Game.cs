@@ -52,7 +52,6 @@ namespace Rogue
         }
 
 
-        //GameState currentGameState;
         TextBoxEntry playerNameEntry;
         public MultipleChoiceEntry classChoices = new MultipleChoiceEntry(new string[] { Role.Wizard.ToString(), Role.Swordfighter.ToString(), Role.Archer.ToString(), Role.Homeless.ToString(), Role.ManWithBigWoodenStick.ToString() });
         public MultipleChoiceEntry raceChoices = new MultipleChoiceEntry(new string[] { Race.Human.ToString(), Race.Elf.ToString(), Race.Rat.ToString(), Race.Jesus.ToString() });
@@ -71,7 +70,6 @@ namespace Rogue
 
             if (creator.Button("Start Game"))
             {
-                Console.WriteLine(GameStateStack.Peek());
                 Console.WriteLine("Game Started");
                 ChangeGameState(GameState.CharacterCreator);
                 Console.WriteLine(GameStateStack.Peek());
@@ -80,8 +78,10 @@ namespace Rogue
             if (creator.Button("Settings"))
             {
                 ChangeGameState(GameState.Settings);
+                Console.WriteLine(GameStateStack.Peek());
             }
         }
+        //Hahmon creator menu
         void DrawCharacterCreatorMenu()
         {
             int menuWidth = Raylib.GetScreenWidth() / 4;
@@ -104,7 +104,7 @@ namespace Rogue
                 if (TestName( playerNameEntry.ToString() ))
                 {
                     player.PlayerName = playerNameEntry.ToString();
-
+                    //Rotu valinta
                     switch (raceChoices.GetSelected())
                     {
                         case "Human":
@@ -121,6 +121,7 @@ namespace Rogue
                             break;
 
                     }
+                    //Class Valinta
                     switch (classChoices.GetSelected())
                     {
                         case "Wizard":
@@ -141,10 +142,12 @@ namespace Rogue
 
                     }
                     ChangeGameState(GameState.GameLoop);
+                    Console.WriteLine(GameStateStack.Peek());
                 }
             }
             creator.EndMenu();
         }
+        //Nimen testaus että ei ole numeroita tai spesiaali kirjaimia
         public bool TestName(string nimi)
         {
             if (string.IsNullOrEmpty(nimi))
@@ -176,9 +179,11 @@ namespace Rogue
             InIt();
             GameLoop();
         }
+    
         private void InIt()
         {
             ChangeGameState(GameState.MainMenu);
+            Console.WriteLine(GameStateStack.Peek());
 
             settingsMenu = new SettingsMenu();
             // Kytke asetusvalikon tapahtumaan funktio
@@ -194,8 +199,6 @@ namespace Rogue
             TurboMapReader.TiledMap tileMap = TurboMapReader.MapReader.LoadMapFromFile("Maps/Rogue_map_simple.json");
             playerNameEntry = new TextBoxEntry(14);
             player = CreateCharacter();
-            //MapLoader loader = new MapLoader();
-            //level01 = loader.LoadMapFromFile();
             MapLoader Reader = new MapLoader();
             level01 = Reader.LoadLayeredMap("Maps/Rogue_map_simple.json");
             level = MapReader.LoadMapFromFile("Maps/Rogue_map_simple.json");
@@ -228,7 +231,6 @@ namespace Rogue
             Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
 
             Raylib.SetTargetFPS(30);
-            //Console.Clear();
         }
 
         public void MainMenu()
@@ -252,6 +254,7 @@ namespace Rogue
                 Console.WriteLine("Fuck you");
 
                 ChangeGameState(GameState.CharacterCreator);
+                Console.WriteLine(GameStateStack.Peek());
             }
 
             // Piirrä seuraava nappula edellisen alapuolelle
@@ -286,12 +289,10 @@ namespace Rogue
             Raylib.BeginDrawing();
             // Piirrä peli skaalattuna ruudulle
             DrawGameToTexture();
-            //DrawMainMenu();
             Raylib.EndDrawing();
         }
         public void DrawGameToTexture() 
         {
-            //DrawGame();
             DrawGameScaled();
         }
         private void DrawGameScaled()
@@ -313,7 +314,6 @@ namespace Rogue
 
             // Piirrä renderöintitextuuri skaalattuna ruudulle
             Raylib.DrawTexturePro(game_screen.texture, source, destination, Vector2.Zero, 0f, Raylib.WHITE);
-           // Raylib.EndDrawing();
         }
         private void UpdateGame()
         {
@@ -405,12 +405,12 @@ namespace Rogue
         {
             while (Raylib.WindowShouldClose() == false)
             {
+                //Jos StateStack on tyhjä, aloita aloitusmenusta
                 if (GameStateStack.Count == 0)
                 {
                     ChangeGameState(GameState.MainMenu);
                 }
                 GameState currentState = GameStateStack.Peek();
-                Console.WriteLine(currentState);
                 switch (currentState)
                     {
                         case GameState.MainMenu:
@@ -418,7 +418,6 @@ namespace Rogue
                             Raylib.ClearBackground(Raylib.BLACK);
                             // Tämä koodi on uutta
                             DrawMainMenu();
-                            //MainMenu();
                             Raylib.EndDrawing();
                             break;
                         case GameState.CharacterCreator:
@@ -446,34 +445,27 @@ namespace Rogue
                 } // while(true) ends
             }
         } // GameLoop ends
+
+        //Event handler functions
         void OnSettingsBackButtonPressed(object sender, EventArgs args)
         {
+            Console.WriteLine("Returning to Previous State");
             GameStateStack.Pop();
         }
         void OnPauseMainMenuPressed(object sender, EventArgs args)
         {
+            Console.WriteLine("Returning to Main Menu");
             ChangeGameState(GameState.MainMenu);
         }
         void OnPauseBackButtonPressed(object sender, EventArgs args)
         {
+            Console.WriteLine("Returning to Previous State");
             GameStateStack.Pop();
         }
         void OnPauseOptionsButtonPressed(object sender, EventArgs args)
         {
+            Console.WriteLine("Opening Options Menu");
             ChangeGameState(GameState.Settings);
-        }
-
-        /*void ChangeGameState(GameState gameState)
-        {
-            currentGameState = gameState;
-            if (gameState == GameState.MainMenu)
-            {
-                Console.WriteLine("GameStateStack cleared");
-                GameStateStack.Clear();
-            }
-            Console.WriteLine(gameState + "pushed");
-            GameStateStack.Push(gameState);
-        }*/
-        
+        }       
     }
 }

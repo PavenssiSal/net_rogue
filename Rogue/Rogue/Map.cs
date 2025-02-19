@@ -163,13 +163,6 @@ namespace Rogue
             int FloorY = (int)(atlasIndex2 / imagesPerRow);
             int imagePixelXB = FloorX * tileSize;
             int imagePixelYB = FloorY * tileSize;
-            /*Dictionary<int, Rectangle> kuvaMappi = new Dictionary<int, Rectangle>();
-            kuvaMappi.Add(2, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
-            kuvaMappi.Add(1, new Rectangle(imagePixelXB, imagePixelYB, Game.tileSize, Game.tileSize));
-            kuvaMappi.Add(14, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
-            kuvaMappi.Add(15, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
-            kuvaMappi.Add(29, new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize));
-            */
             Rectangle WallTexture = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
             Rectangle FloorTexture = new Rectangle(imagePixelXB, imagePixelYB, Game.tileSize, Game.tileSize);
 
@@ -198,23 +191,16 @@ namespace Rogue
                     }
 
                      Vector2 pixelPosition = new Vector2(pixelX, pixelY);
-                    /*if (kuvaMappi.ContainsKey(tileId))
-                    {
-                        Raylib.DrawTextureRec(image, kuvaMappi[tileId], pixelPosition, Raylib.WHITE);
-                    }*/
 
                     switch (tileId)
                     {
                         case 50:
 
                             // Floor
-                            //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.BLANK);
-                            //Raylib.DrawText(".", pixelX + 5, pixelY, tileSize, Raylib.WHITE);
                             Raylib.DrawTextureRec(image, FloorTexture, pixelPosition, Raylib.WHITE);
                             break;
                         case 41:
-                            //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.DARKGRAY); // Wall
-                            //Raylib.DrawText("#", pixelX, pixelY, tileSize, Raylib.WHITE);
+                            //Wall... Presumably
                             Raylib.DrawTextureRec(image, WallTexture, pixelPosition, Raylib.WHITE);
                             break;
                         default:
